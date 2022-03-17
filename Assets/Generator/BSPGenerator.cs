@@ -25,13 +25,19 @@ public class BSPGenerator : MonoBehaviour
     // Keep track of the number of iterations in the algorithm
     private int currentSplits;
 
+    // Dungeon Drawer
+    private DungeonDrawer dungeonDrawer;
+
     // Start is called before the first frame update
     void Start()
     {
+        dungeonDrawer = new DungeonDrawer(this.gameObject);
         // Setup Dungeon from parameters
         setupBaseDungeon();
         // Build Tree
         buildBSP();
+        // Build Parition Quads
+        buildPartitions();
         // Build Rooms
         buildRooms();
         // Build Corridors
@@ -91,9 +97,14 @@ public class BSPGenerator : MonoBehaviour
         }
         // Find all leaf nodes from root and update the leaf nodes list in BSPTree object.
         BSPTree.updateLeafNodes(BSPTree.getRoot());
+    
+    }
+
+    private void buildPartitions()
+    {
         // Display all leaf quads/partitions
         foreach (Node node in BSPTree.getLeafNodes()) {
-            node.drawPartition(this.gameObject);
+            dungeonDrawer.drawPartition(node);
         }
     }
 
@@ -102,7 +113,7 @@ public class BSPGenerator : MonoBehaviour
         // Draw all leaf node rooms
         foreach (Node node in BSPTree.getLeafNodes()) {
             node.updateRoomSpace();
-            node.drawRoom(this.gameObject);
+            dungeonDrawer.drawRoom(node);
         }
     }
 
@@ -110,7 +121,7 @@ public class BSPGenerator : MonoBehaviour
     {
         // Draw all corridors
         foreach (Node node in BSPTree.getLeafNodes()) {
-            node.drawCorridors(this.gameObject);
+            dungeonDrawer.drawCorridors(node);
         }
     }
 
