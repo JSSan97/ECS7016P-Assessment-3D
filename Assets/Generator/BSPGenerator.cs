@@ -13,7 +13,7 @@ public class BSPGenerator : MonoBehaviour
     public float baseDungeonWidth;
     public float baseDungeonHeight;
 
-    // Number of Splits to split tree
+    // Max number of Splits to split tree
     public int maxSplits;
 
     // Minimal Acceptable Size for Rooms
@@ -28,7 +28,7 @@ public class BSPGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Setup Dungeon
+        // Setup Dungeon from parameters
         setupBaseDungeon();
         // Build Tree
         buildBSP();
@@ -56,7 +56,7 @@ public class BSPGenerator : MonoBehaviour
         BSPTree.addRootNode(bottomLeft, bottomRight, topLeft, topRight);
     }
     
-    void buildBSP()
+    private void buildBSP()
     {
         // Record a queue of nodes that need to be partitioned
         LinkedList<Node> queue = new LinkedList<Node>();
@@ -79,7 +79,7 @@ public class BSPGenerator : MonoBehaviour
                 // Get allowed split position given the chosen direction
                 float splitPosition = getPartitionPosition(splitDirection, parent);
 
-                // Paritition parent dungeon setup
+                // Paritition parent dungeon
                 partitionCell(parent, splitDirection, splitPosition);
 
                 // Add left and right child to queue to be partitioned
@@ -88,27 +88,30 @@ public class BSPGenerator : MonoBehaviour
 
                 currentSplits += 1;
             }
-
         }
-        // Find all leaf nodes from root and display them in quads
+        // Find all leaf nodes from root and update the leaf nodes list in BSPTree object.
         BSPTree.updateLeafNodes(BSPTree.getRoot());
-        // Display all leaf quads
+        // Display all leaf quads/partitions
         foreach (Node node in BSPTree.getLeafNodes()) {
             node.drawPartition(this.gameObject);
         }
     }
 
-    void buildRooms() 
+    private void buildRooms() 
     {
+        // Draw all leaf node rooms
         foreach (Node node in BSPTree.getLeafNodes()) {
             node.updateRoomSpace();
             node.drawRoom(this.gameObject);
         }
     }
 
-    void buildCorridors()
+    private void buildCorridors()
     {
-        
+        // Draw all corridors
+        foreach (Node node in BSPTree.getLeafNodes()) {
+            node.drawCorridors(this.gameObject);
+        }
     }
 
     private bool isAcceptableSize(Node node, int splitDirection)
@@ -202,8 +205,6 @@ public class BSPGenerator : MonoBehaviour
         // Need to know parents and siblings for connecting rooms with corridors.
         child1.sibling = child2;
         child2.sibling = child1;
-        child1.parent = node;
-        child2.parent = node;
     }
 
 }

@@ -28,7 +28,6 @@ public class BinaryTree
             childNode.parent = parent;
             childNode.appendToName("B");
             parent.rightNode = childNode;
-
         }
 
         return childNode;
