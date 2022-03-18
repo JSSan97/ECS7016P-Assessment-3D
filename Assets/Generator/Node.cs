@@ -36,6 +36,9 @@ public class Node
     // Name - Helps identify objects in hierarchy, parents and position
     public string name { get; set; }
 
+    // Depth of node
+    public int depth { get; set; } = 0;
+
     public Node(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topLeft, Vector3 topRight) {
         this.bottomLeft = bottomLeft;
         this.bottomRight = bottomRight;
@@ -57,5 +60,14 @@ public class Node
     public void appendToName(string letter) {
         // Ensure parent has been set before using.
         this.name = parent.name + letter;
+    }
+
+    public void updateDepth() {
+        if(parent != null)
+            this.depth = parent.depth + 1;
+    }
+
+    public Vector3 getRoomCentre() {
+        return (roomTopLeft + roomBottomRight) / 2;
     }
 }

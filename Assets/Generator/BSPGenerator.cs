@@ -96,8 +96,10 @@ public class BSPGenerator : MonoBehaviour
             }
         }
         // Find all leaf nodes from root and update the leaf nodes list in BSPTree object.
-        BSPTree.updateLeafNodes(BSPTree.getRoot());
-    
+        BSPTree.updateLeafNodesFromRoot();
+        // Update Max Depth, need for drawing corridors later
+        BSPTree.updateMaxDepth();
+
     }
 
     private void buildPartitions()
@@ -119,9 +121,45 @@ public class BSPGenerator : MonoBehaviour
 
     private void buildCorridors()
     {
-        // Draw all corridors
-        foreach (Node node in BSPTree.getLeafNodes()) {
-            dungeonDrawer.drawCorridors(node);
+        int currentDepth = BSPTree.getMaxDepth() - 1;
+        // Draw all corridors of children, starting from the lowest level
+        List<Node> parents;
+        parents = BSPTree.getNodesAtDepth(currentDepth);
+        // Starting from the lowest level
+        foreach (Node node in parents) {
+            if(node.leftNode != null && node.rightNode != null) {
+                dungeonDrawer.drawCorridors(node.leftNode, node.rightNode);
+            }
+        }
+        currentDepth = currentDepth - 1;
+
+        while(currentDepth > -1) {
+            parents = BSPTree.getNodesAtDepth(currentDepth);
+            foreach (Node node in parents) {
+                if(node.leftNode != null && node.rightNode != null) {
+                    // Get left and right leaf children of the node
+                    List<Node> leftChildren = BSPTree.getLeafNodes(node.leftNode);
+                    List<Node> rightChildren = BSPTree.getLeafNodes(node.rightNode);
+
+                    Node node1 = null;
+                    Node node2 = null;
+                    float minDistance = 0;
+
+                    foreach(Node leftNode in leftChildren) {
+                        foreach(Node rightNode in rightChildren) {
+                            float tempDistance = Vector3.Distance(leftNode.getRoomCentre(), rightNode.getRoomCentre());
+
+                            if((node1 == null) || (tempDistance < minDistance) ) {
+                                node1 = leftNode;
+                                node2 = rightNode;
+                                minDistance = tempDistance;
+                            }
+                        }
+                    }
+                    dungeonDrawer.drawCorridors(node1, node2);
+                }
+            }
+            currentDepth = currentDepth - 1;
         }
     }
 

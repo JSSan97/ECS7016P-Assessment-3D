@@ -20,60 +20,54 @@ public class DungeonDrawer
         node.quadSpace = this.createQuad("Quad " + node.name, 0.01f, node.bottomLeft, node.bottomRight, node.topLeft, node.topRight, randomColor);
     }
 
-    public void drawCorridors(Node node) {
-        // A - Horizontal Split Bottom of sibling or Vertical Split Left of Sibling
-        // B - Horizontal Split Top of sibling or Vertical Split Right of Sibling
-        char lastCharacter = node.name[node.name.Length - 1];
-        Node sibling = node.sibling;
+    public void drawCorridors(Node node, Node node2) {
+        // Find the two corner vectors which have the closest vectors of its siblings
+        // Horizontal split
+        float distance1 = Vector3.Distance(node.roomTopRight, node2.roomBottomRight);
+        // Vertical split
+        float distance2 = Vector3.Distance(node.roomBottomRight, node2.roomBottomLeft);
+    
+        Vector3 corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight;
 
-        // We only need to draw one corridor from sibling so just use one child (left or 'A')
-        if(lastCharacter.Equals('A')) {
-            // Find the two corner vectors which have the closest vectors of its siblings
-            // Horizontal split
-            float distance1 = Vector3.Distance(node.roomTopRight, sibling.roomBottomRight);
-            // Vertical split
-            float distance2 = Vector3.Distance(node.roomBottomRight, sibling.roomBottomLeft);
-        
-            Vector3 corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight;
+        if (distance1 < distance2) {
+            // Horizontal Split, we want to shorten width of corridor
+            float minimumX = (node2.roomBottomLeft.x > node.roomTopLeft.x) ? node2.roomBottomLeft.x : node.roomTopLeft.x;
+            float maximumX = (node2.roomBottomRight.x < node.roomTopRight.x) ? node2.roomBottomRight.x : node.roomTopRight.x;
 
-            if (distance1 < distance2) {
-                // Horizontal Split, we want to shorten width of corridor
-                float minimumX = (sibling.roomBottomLeft.x > node.roomTopLeft.x) ? sibling.roomBottomLeft.x : node.roomTopLeft.x;
-                float maximumX = (sibling.roomBottomRight.x < node.roomTopRight.x) ? sibling.roomBottomRight.x : node.roomTopRight.x;
+            // Width of the corridor
+            float width = 4;
+            // + or - offset (corridors shouldn't be at far end)
+            float offset = width;
+            float xPosition = Random.Range(minimumX, maximumX - offset);
 
-                // Width of the corridor
-                float width = 5;
-                // + or - width as we need an offset (corridors shouldn't be at far end)
-                float xPosition = Random.Range(minimumX + width, maximumX - width);
+            corridorBottomLeft = new Vector3(xPosition, node.roomTopLeft.y, node.roomTopLeft.z);
+            corridorBottomRight = new Vector3(xPosition + width, node.roomTopRight.y, node.roomTopRight.z);
+            corridorTopLeft = new Vector3(xPosition, node2.roomBottomLeft.y, node.roomBottomLeft.z);
+            corridorTopRight = new Vector3(xPosition + width, node2.roomBottomRight.y, node2.roomBottomRight.z);
+        } else {
+            // Vertical split, we want to shorten height of corridor
+            float minimumY = (node2.roomBottomLeft.y > node.roomBottomRight.y) ? node2.roomBottomLeft.y : node.roomBottomRight.y;
+            float maximumY = (node2.roomTopRight.y < node.roomTopLeft.y) ? node2.roomTopRight.y : node.roomTopLeft.y;
 
-                corridorBottomLeft = new Vector3(xPosition, node.roomTopLeft.y, node.roomTopLeft.z);
-                corridorBottomRight = new Vector3(xPosition + width, node.roomTopRight.y, node.roomTopRight.z);
-                corridorTopLeft = new Vector3(xPosition, sibling.roomBottomLeft.y, node.roomBottomLeft.z);
-                corridorTopRight = new Vector3(xPosition + width, sibling.roomBottomRight.y, sibling.roomBottomRight.z);
-            } else {
-                // Vertical split, we want to shorten height of corridor
-                float minimumY = (sibling.roomBottomLeft.y > node.roomBottomRight.y) ? sibling.roomBottomLeft.y : node.roomBottomRight.y;
-                float maximumY = (sibling.roomTopRight.y < node.roomTopLeft.y) ? sibling.roomTopRight.y : node.roomTopLeft.y;
+            // Height of the corridor
+            float height = 4;
+            // + or - offset (corridors shouldn't be at far end)
+            float offset = height;
 
-                // Height of the corridor
-                float height = 5;
-                // + or - height  as we need an offset (corridors shouldn't be at far end)
-                float yPosition = Random.Range(minimumY + height, maximumY - height);
+            float yPosition = Random.Range(minimumY, maximumY - offset);
 
-                corridorBottomLeft = new Vector3(node.roomBottomRight.x, yPosition, node.roomBottomRight.z);
-                corridorBottomRight = new Vector3(sibling.roomBottomLeft.x, yPosition, sibling.roomBottomLeft.z);
-                corridorTopLeft = new Vector3(node.roomTopRight.x, yPosition + height, node.roomTopRight.z);
-                corridorTopRight = new Vector3(sibling.roomTopLeft.x, yPosition + height, sibling.roomTopLeft.z);
-            }
+            corridorBottomLeft = new Vector3(node.roomBottomRight.x, yPosition, node.roomBottomRight.z);
+            corridorBottomRight = new Vector3(node2.roomBottomLeft.x, yPosition, node2.roomBottomLeft.z);
+            corridorTopLeft = new Vector3(node.roomTopRight.x, yPosition + height, node.roomTopRight.z);
+            corridorTopRight = new Vector3(node2.roomTopLeft.x, yPosition + height, node2.roomTopLeft.z);
+        }
 
-            string objectName = "Corridor " + node.name + " to " + sibling.name; 
-            Color color = Color.black;
-            this.createQuad(objectName, 0.02f, corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight, color);
-        } 
+        string objectName = "Corridor " + node.name + " to " + node2.name; 
+        Color color = Color.black;
+        this.createQuad(objectName, 0.02f, corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight, color);
     }
 
-
-    public GameObject createQuad(string name, float elevation, Vector3 bottomLeft, Vector3 bottomRight, Vector3 topLeft, Vector3 topRight, Color color)
+    private GameObject createQuad(string name, float elevation, Vector3 bottomLeft, Vector3 bottomRight, Vector3 topLeft, Vector3 topRight, Color color)
     {
         // Create new quad object
         GameObject quad = new GameObject(name);
