@@ -156,7 +156,9 @@ MonoBehaviour:
   mainCamera: {fileID: 963194225}
   baseDungeonWidth: 100
   baseDungeonHeight: 100
-  maxSplits: 10
+  corridorWidth: 4
+  minSplits: 10
+  maxSplits: 13
   roomMinHeightAcceptance: 40
   roomMinWidthAcceptance: 40
 --- !u!4 &176321110

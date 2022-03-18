@@ -13,7 +13,11 @@ public class BSPGenerator : MonoBehaviour
     public float baseDungeonWidth;
     public float baseDungeonHeight;
 
-    // Max number of Splits to split tree
+    // Set size of corridor
+    public float corridorWidth;
+
+    // Min & Max number of Splits to split tree, chosen randomly between (more variation)
+    public int minSplits;
     public int maxSplits;
 
     // Minimal Acceptable Size for Rooms
@@ -28,10 +32,13 @@ public class BSPGenerator : MonoBehaviour
     // Dungeon Drawer
     private DungeonDrawer dungeonDrawer;
 
+    // Choose number of splits between min and max
+    private int randomSplits;
+
     // Start is called before the first frame update
     void Start()
     {
-        dungeonDrawer = new DungeonDrawer(this.gameObject);
+        dungeonDrawer = new DungeonDrawer(this.gameObject, this.corridorWidth);
         // Setup Dungeon from parameters
         setupBaseDungeon();
         // Build Tree
@@ -46,6 +53,7 @@ public class BSPGenerator : MonoBehaviour
 
     void setupBaseDungeon()
     {
+        randomSplits = Random.Range(minSplits, maxSplits + 1);
         // Scale and Orientate Dungeon, bottom left corner is (0, 0, 0) -> Easier to do maths
         baseDungeon.transform.localScale = new Vector3(baseDungeonWidth, baseDungeonHeight, 1);
         baseDungeon.transform.position = new Vector3(baseDungeonWidth/2, 0, baseDungeonHeight/2);
@@ -70,7 +78,7 @@ public class BSPGenerator : MonoBehaviour
         // Start with parent node
         queue.AddFirst(BSPTree.getRoot());
 
-        while(currentSplits < maxSplits) {
+        while(currentSplits < randomSplits) {
             if (queue.Count == 0)
                 break;
 

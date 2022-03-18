@@ -31,7 +31,8 @@ public class Node
 
     // Game Object of Space
     public GameObject quadSpace { get; set; }
-    public GameObject quadRoom {get; set; }
+    public GameObject quadRoom { get; set; }
+    public GameObject quadCorridor { get; set; }
 
     // Name - Helps identify objects in hierarchy, parents and position
     public string name { get; set; }
