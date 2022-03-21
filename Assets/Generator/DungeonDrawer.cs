@@ -40,6 +40,9 @@ public class DungeonDrawer
         float distance1 = Vector3.Distance(node.roomTopRight, node2.roomBottomRight);
         // Vertical split
         float distance2 = Vector3.Distance(node.roomBottomRight, node2.roomBottomLeft);
+
+        List<Vector3> nodeExit = new List<Vector3>();
+        List<Vector3> nodeExit2 = new List<Vector3>();
     
         Vector3 corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight;
 
@@ -56,6 +59,11 @@ public class DungeonDrawer
             corridorBottomRight = new Vector3(xPosition + this.corridorWidth, node.roomTopRight.y, node.roomTopRight.z);
             corridorTopLeft = new Vector3(xPosition, node2.roomBottomLeft.y, node.roomBottomLeft.z);
             corridorTopRight = new Vector3(xPosition + this.corridorWidth, node2.roomBottomRight.y, node2.roomBottomRight.z);
+
+            nodeExit.Add(corridorBottomLeft);
+            nodeExit.Add(corridorBottomRight);
+            nodeExit2.Add(corridorTopLeft);
+            nodeExit2.Add(corridorTopRight);
         } else {
             // Vertical split, we want to shorten height of corridor
             float minimumY = (node2.roomBottomLeft.y > node.roomBottomRight.y) ? node2.roomBottomLeft.y : node.roomBottomRight.y;
@@ -69,11 +77,20 @@ public class DungeonDrawer
             corridorBottomRight = new Vector3(node2.roomBottomLeft.x, yPosition, node2.roomBottomLeft.z);
             corridorTopLeft = new Vector3(node.roomTopRight.x, yPosition + this.corridorWidth, node.roomTopRight.z);
             corridorTopRight = new Vector3(node2.roomTopLeft.x, yPosition + this.corridorWidth, node2.roomTopLeft.z);
+
+            nodeExit.Add(corridorBottomLeft);
+            nodeExit.Add(corridorTopRight);
+            nodeExit2.Add(corridorBottomRight);
+            nodeExit2.Add(corridorTopRight);
         }
+
+        // Record corridor vertices for automata later (we don't want to block it with a wall)
+        node.corridorExits.Add(nodeExit);
+        node2.corridorExits.Add(nodeExit2);
 
         string objectName = "Corridor " + node.name + " to " + node2.name; 
         Color color = Color.black;
-        node.quadCorridor = this.createQuad(this.corridors, objectName, 0.02f, corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight, color);
+        this.createQuad(this.corridors, objectName, 0.02f, corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight, color);
     }
 
     private GameObject createQuad(GameObject parentObj, string name, float elevation, Vector3 bottomLeft, Vector3 bottomRight, Vector3 topLeft, Vector3 topRight, Color color)

@@ -29,6 +29,9 @@ public class Node
     public Vector3 roomTopLeft  { get; set; }
     public Vector3 roomTopRight { get; set; }
 
+    // Keep an array of corridors ends
+    public List<List<Vector3>> corridorExits;
+
     // Game Object of Space
     public GameObject quadSpace { get; set; }
     public GameObject quadRoom { get; set; }
