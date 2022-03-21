@@ -49,6 +49,8 @@ public class BSPGenerator : MonoBehaviour
         buildRooms();
         // Build Corridors
         buildCorridors();
+        // Populate Rooms
+        populateRooms();
     }
 
     void setupBaseDungeon()
@@ -65,8 +67,8 @@ public class BSPGenerator : MonoBehaviour
         Vector3 bottomLeft, bottomRight, topLeft, topRight;
         bottomLeft = new Vector3(0, 0, 0);
         bottomRight = new Vector3(baseDungeonWidth, 0, 0);
-        topLeft = new Vector3(0, baseDungeonHeight, 0);
-        topRight = new Vector3(baseDungeonWidth, baseDungeonHeight, 0);
+        topLeft = new Vector3(0, 0, baseDungeonHeight);
+        topRight = new Vector3(baseDungeonWidth, 0, baseDungeonHeight);
         BSPTree.addRootNode(bottomLeft, bottomRight, topLeft, topRight);
     }
     
@@ -212,8 +214,8 @@ public class BSPGenerator : MonoBehaviour
         // Get Split Position, either horizontally or vertically
         if (splitDirection == 1) {
             // Split on the y axis. I.e. y = splitPosition for horiztonal partition
-            offset = (node.topLeft.y - node.bottomLeft.y) / 3;
-            splitPosition = Random.Range(node.bottomLeft.y + offset, node.topLeft.y - offset);
+            offset = (node.topLeft.z - node.bottomLeft.z) / 3;
+            splitPosition = Random.Range(node.bottomLeft.z + offset, node.topLeft.z - offset);
         } else {
             // Split on the x axis. I.e. x = splitPosition for vertical partition
             offset = (node.bottomRight.x - node.bottomLeft.x) / 4;
@@ -233,13 +235,13 @@ public class BSPGenerator : MonoBehaviour
             // Horizontal Bottom
             bottomLeft = node.bottomLeft;
             bottomRight = node.bottomRight;
-            topLeft = new Vector3(node.topLeft.x, splitPosition, node.topLeft.z);
-            topRight = new Vector3(node.topRight.x, splitPosition, node.topRight.z);
+            topLeft = new Vector3(node.topLeft.x, node.topLeft.y, splitPosition);
+            topRight = new Vector3(node.topRight.x, node.topRight.y,  splitPosition);
             child1 = BSPTree.addChildNode(node, bottomLeft, bottomRight, topLeft, topRight);
 
             // Horizontal Top
-            bottomLeft = new Vector3(node.topLeft.x, splitPosition, node.topLeft.z);
-            bottomRight = new Vector3(node.topRight.x, splitPosition, node.topRight.z);
+            bottomLeft = new Vector3(node.topLeft.x, node.topLeft.y, splitPosition);
+            bottomRight = new Vector3(node.topRight.x, node.topRight.y, splitPosition);
             topLeft = node.topLeft;
             topRight = node.topRight;
             child2 = BSPTree.addChildNode(node, bottomLeft, bottomRight, topLeft, topRight);
@@ -262,6 +264,13 @@ public class BSPGenerator : MonoBehaviour
         // Need to know parents and siblings for connecting rooms with corridors.
         child1.sibling = child2;
         child2.sibling = child1;
+    }
+
+    private void populateRooms(){
+        foreach (Node node in BSPTree.getLeafNodes()) {
+            node.updateRoomSpace();
+            dungeonDrawer.populateRoom(node);
+        }        
     }
 
 }

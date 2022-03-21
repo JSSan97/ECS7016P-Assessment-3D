@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CellularAutomata
 {
+    // Node, record of all room information
+    Node node;
     // Room Width
     private int width;
     // Room Height
@@ -17,12 +19,20 @@ public class CellularAutomata
         this.height = Mathf.RoundToInt(Vector3.Distance(node.roomTopRight, node.roomBottomRight));
         this.width = Mathf.RoundToInt(Vector3.Distance(node.roomBottomLeft, node.roomBottomRight));
         this.fillPercent = Random.Range(0, 30);
+        this.node = node;
+        room = new int[width,height];
     }
 
-    private void fillRoom() {
+    public void fillRoom() {
         // Random Seed
         string seed = Time.time.ToString();
         System.Random pseudoRandom = new System.Random(seed.GetHashCode());
+        Debug.Log(node.name);
+        Debug.Log("Node name: " + node.name + " Width: " + width + " Height: " + height);
+        // Note that y is actually z
+        Debug.Log(node.corridorExits[0][0]);
+        Debug.Log(node.corridorExits[0][0] - node.roomBottomLeft);
+        // Debug.Log(node.corridorExits[0][1]);
 
         // Create some noise
         for (int x=0; x < width; x++) {
@@ -38,7 +48,7 @@ public class CellularAutomata
         }
     }
 
-    private void drawRoom() {
+    public void drawRoom() {
         for (int x=0; x < width; x++) {
             for (int y=0; y < height; y++) {
                 Gizmos.color = (room[x, y] == 1) ? Color.black : Color.white;

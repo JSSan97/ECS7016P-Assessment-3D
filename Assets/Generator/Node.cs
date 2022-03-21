@@ -30,7 +30,7 @@ public class Node
     public Vector3 roomTopRight { get; set; }
 
     // Keep an array of corridors ends
-    public List<List<Vector3>> corridorExits;
+    public List<List<Vector3>> corridorExits = new List<List<Vector3>>();
 
     // Game Object of Space
     public GameObject quadSpace { get; set; }
@@ -55,10 +55,10 @@ public class Node
         float width = Vector3.Distance(this.bottomLeft, this.bottomRight);
         float offset = 3.0f;
 
-        roomTopLeft = new Vector3(topLeft.x + offset, topLeft.y - offset, topLeft.z);
-        roomBottomRight = new Vector3(bottomRight.x - offset, bottomRight.y + offset, bottomRight.z);
-        roomTopRight = new Vector3(topRight.x - offset, topRight.y - offset, topRight.z);
-        roomBottomLeft = new Vector3(bottomLeft.x + offset, bottomLeft.y + offset, bottomLeft.z);
+        roomTopLeft = new Vector3(topLeft.x + offset, topLeft.y, topLeft.z - offset);
+        roomBottomRight = new Vector3(bottomRight.x - offset, bottomRight.y, bottomRight.z + offset);
+        roomTopRight = new Vector3(topRight.x - offset, topRight.y, topRight.z - offset);
+        roomBottomLeft = new Vector3(bottomLeft.x + offset, bottomLeft.y, bottomLeft.z + offset);
     }
 
     public void appendToName(string letter) {

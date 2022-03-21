@@ -24,6 +24,12 @@ public class DungeonDrawer
         this.corridorWidth = corridorWidth;
     }
 
+    public void populateRoom(Node node) {
+        CellularAutomata cellularAutomata = new CellularAutomata(node);
+        cellularAutomata.fillRoom();
+        //cellularAutomata.drawRoom();
+    }
+
     public void drawRoom(Node node) {
         Color color = Color.black;
         node.quadSpace = this.createQuad(this.rooms, "Room " + node.name, 0.02f, node.roomBottomLeft, node.roomBottomRight, node.roomTopLeft, node.roomTopRight, color);
@@ -57,7 +63,7 @@ public class DungeonDrawer
             // Corners to draw quad
             corridorBottomLeft = new Vector3(xPosition, node.roomTopLeft.y, node.roomTopLeft.z);
             corridorBottomRight = new Vector3(xPosition + this.corridorWidth, node.roomTopRight.y, node.roomTopRight.z);
-            corridorTopLeft = new Vector3(xPosition, node2.roomBottomLeft.y, node.roomBottomLeft.z);
+            corridorTopLeft = new Vector3(xPosition, node2.roomBottomLeft.y, node2.roomBottomLeft.z);
             corridorTopRight = new Vector3(xPosition + this.corridorWidth, node2.roomBottomRight.y, node2.roomBottomRight.z);
 
             nodeExit.Add(corridorBottomLeft);
@@ -66,17 +72,15 @@ public class DungeonDrawer
             nodeExit2.Add(corridorTopRight);
         } else {
             // Vertical split, we want to shorten height of corridor
-            float minimumY = (node2.roomBottomLeft.y > node.roomBottomRight.y) ? node2.roomBottomLeft.y : node.roomBottomRight.y;
-            float maximumY = (node2.roomTopRight.y < node.roomTopLeft.y) ? node2.roomTopRight.y : node.roomTopLeft.y;
+            float minimumY = (node2.roomBottomLeft.z > node.roomBottomRight.z) ? node2.roomBottomLeft.z : node.roomBottomRight.z;
+            float maximumY = (node2.roomTopRight.z < node.roomTopLeft.z) ? node2.roomTopRight.z : node.roomTopLeft.z;
 
-            // Y position of corridor
-            float yPosition = Random.Range(minimumY, maximumY - this.corridorWidth);
-
-            // Corners to draw quad
-            corridorBottomLeft = new Vector3(node.roomBottomRight.x, yPosition, node.roomBottomRight.z);
-            corridorBottomRight = new Vector3(node2.roomBottomLeft.x, yPosition, node2.roomBottomLeft.z);
-            corridorTopLeft = new Vector3(node.roomTopRight.x, yPosition + this.corridorWidth, node.roomTopRight.z);
-            corridorTopRight = new Vector3(node2.roomTopLeft.x, yPosition + this.corridorWidth, node2.roomTopLeft.z);
+            // Z position of corridor
+            float zPosition = Random.Range(minimumY, maximumY - this.corridorWidth);
+            corridorBottomLeft = new Vector3(node.roomBottomRight.x, node.roomBottomRight.y, zPosition);
+            corridorBottomRight = new Vector3(node2.roomBottomLeft.x, node2.roomBottomLeft.y, zPosition);
+            corridorTopLeft = new Vector3(node.roomTopRight.x, node.roomTopRight.y, zPosition + this.corridorWidth);
+            corridorTopRight = new Vector3(node2.roomTopLeft.x, node2.roomTopLeft.y, zPosition + this.corridorWidth);
 
             nodeExit.Add(corridorBottomLeft);
             nodeExit.Add(corridorTopRight);
@@ -100,7 +104,7 @@ public class DungeonDrawer
         // Set the quad object under the pcg parent (can be any game object)
         quad.transform.parent = parentObj.transform;
         // Rotate 90 degrees to fit in dungeon
-        quad.transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
+        // quad.transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
         // Elevate the dungeon by y-axis (so no overlap between different quads)
         quad.transform.position = new Vector3(quad.transform.position.x, elevation, quad.transform.position.z);
         // Define Mesh Renderer and set material
