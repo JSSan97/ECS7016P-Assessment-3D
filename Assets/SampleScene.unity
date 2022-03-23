@@ -363,6 +363,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2598043922655502286, guid: 03c108750d6a0aa42b8898b19b84072a, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+    - target: {fileID: 2598043922655502286, guid: 03c108750d6a0aa42b8898b19b84072a, type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2598043922655502286, guid: 03c108750d6a0aa42b8898b19b84072a, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5550314203613611064, guid: 03c108750d6a0aa42b8898b19b84072a, type: 3}
       propertyPath: m_RootOrder
       value: 2

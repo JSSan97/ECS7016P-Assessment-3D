@@ -27,12 +27,12 @@ public class DungeonDrawer
     public void populateRoom(Node node) {
         CellularAutomata cellularAutomata = new CellularAutomata(node);
         cellularAutomata.fillRoom();
-        //cellularAutomata.drawRoom();
+        cellularAutomata.drawRoom();
     }
 
     public void drawRoom(Node node) {
         Color color = Color.black;
-        node.quadSpace = this.createQuad(this.rooms, "Room " + node.name, 0.02f, node.roomBottomLeft, node.roomBottomRight, node.roomTopLeft, node.roomTopRight, color);
+        node.quadRoom = this.createQuad(this.rooms, "Room " + node.name, 0.02f, node.roomBottomLeft, node.roomBottomRight, node.roomTopLeft, node.roomTopRight, color);
     }
 
     public void drawPartition(Node node) {
@@ -83,7 +83,7 @@ public class DungeonDrawer
             corridorTopRight = new Vector3(node2.roomTopLeft.x, node2.roomTopLeft.y, zPosition + this.corridorWidth);
 
             nodeExit.Add(corridorBottomLeft);
-            nodeExit.Add(corridorTopRight);
+            nodeExit.Add(corridorTopLeft);
             nodeExit2.Add(corridorBottomRight);
             nodeExit2.Add(corridorTopRight);
         }

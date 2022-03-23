@@ -58,9 +58,9 @@ public class BinaryTree
     }
 
     public List<Node> getLeafNodes(Node node) {
-        leafNodes = new List<Node>();
-        searchLeafNodes(node, leafNodes);
-        return leafNodes;
+        List<Node> leafNodesFromParent = new List<Node>();
+        searchLeafNodes(node, leafNodesFromParent);
+        return leafNodesFromParent;
     }
 
     private void searchLeafNodes(Node parent, List<Node> list) {
