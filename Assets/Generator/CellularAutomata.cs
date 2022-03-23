@@ -23,15 +23,16 @@ public class CellularAutomata
         room = new int[width,height];
     }
 
-    public void fillRoom() {
+    public void populateRoom() {
+        createNoise();
+        fillNoise();
+        drawRoom();
+    }
+
+    public void createNoise() {
         // Random Seed
         string seed = Time.time.ToString();
         System.Random pseudoRandom = new System.Random(seed.GetHashCode());
-        // Debug.Log(node.name);
-        // Debug.Log("Node name: " + node.name + " Width: " + width + " Height: " + height);
-        // Debug.Log("Exit1 : " + node.corridorExits[0][0] + " Exit2 : " + node.corridorExits[0][1]);
-        // Debug.Log("Relative1 : " + (node.corridorExits[0][0] - node.roomBottomLeft));
-        // Debug.Log("Relative2 : " + (node.corridorExits[0][1] - node.roomBottomLeft));
 
         // Create some noise
         for (int x=0; x < width; x++) {
@@ -41,11 +42,37 @@ public class CellularAutomata
 					room[x,y] = 1;
 				} else {
                     // Fill the rest of the area
-                    room[x, y] = (pseudoRandom.Next(0,100) < fillPercent)? 1: 0;
+                    room[x,y] = (pseudoRandom.Next(0,100) < fillPercent)? 1: 0;
                 }
             }
         }
 
+        // Replace corridors ends with zeroes
+        openCorridors();
+    }
+
+    void fillNoise() {
+		for (int i = 0; i < 5; i ++) {
+			smoothRoom();
+		}
+    }
+
+	void smoothRoom() {
+		for (int x = 0; x < width; x ++) {
+			for (int y = 0; y < height; y ++) {
+				int neighbourWallTiles = this.getSurroundingWallCount(x,y);
+
+				if (neighbourWallTiles > 4) {
+					room[x,y] = 1;
+                    openCorridors();
+                }
+				else if (neighbourWallTiles < 4)
+					room[x,y] = 0;
+			}
+		}
+	}
+
+    private void openCorridors(){
         // Replace corridors ends with zeroes
         foreach(List<Vector3> corridor in node.corridorExits) {
             Vector3 vertice1 = corridor[0] - node.roomBottomLeft;
@@ -61,8 +88,24 @@ public class CellularAutomata
                 }
             }
         }
-
     }
+
+	int getSurroundingWallCount(int gridX, int gridY) {
+		int wallCount = 0;
+		for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX ++) {
+			for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY ++) {
+				if (neighbourX >= 0 && neighbourX < width && neighbourY >= 0 && neighbourY < height) {
+					if (neighbourX != gridX || neighbourY != gridY) {
+						wallCount += room[neighbourX,neighbourY];
+					}
+				}
+				else {
+					wallCount ++;
+				}
+			}
+		}
+		return wallCount;
+	}
 
     public void drawRoom() {
         for (int x=0; x < width; x++) {

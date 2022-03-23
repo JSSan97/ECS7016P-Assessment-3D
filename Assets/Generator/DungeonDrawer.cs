@@ -26,8 +26,7 @@ public class DungeonDrawer
 
     public void populateRoom(Node node) {
         CellularAutomata cellularAutomata = new CellularAutomata(node);
-        cellularAutomata.fillRoom();
-        cellularAutomata.drawRoom();
+        cellularAutomata.populateRoom();
     }
 
     public void drawRoom(Node node) {
