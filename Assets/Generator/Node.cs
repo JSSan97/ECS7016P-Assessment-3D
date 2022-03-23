@@ -50,7 +50,7 @@ public class Node
         this.topRight = topRight;
     }
 
-    public void updateRoomSpace() {
+    public void UpdateRoomSpace() {
         float height = Vector3.Distance(this.topRight, this.bottomRight);
         float width = Vector3.Distance(this.bottomLeft, this.bottomRight);
         float offset = 3.0f;
@@ -61,17 +61,17 @@ public class Node
         roomBottomLeft = new Vector3(bottomLeft.x + offset, bottomLeft.y, bottomLeft.z + offset);
     }
 
-    public void appendToName(string letter) {
+    public void AppendToName(string letter) {
         // Ensure parent has been set before using.
         this.name = parent.name + letter;
     }
 
-    public void updateDepth() {
+    public void UpdateDepth() {
         if(parent != null)
             this.depth = parent.depth + 1;
     }
 
-    public Vector3 getRoomCentre() {
+    public Vector3 GetRoomCentre() {
         return (roomTopLeft + roomBottomRight) / 2;
     }
 }

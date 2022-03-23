@@ -157,6 +157,7 @@ MonoBehaviour:
   baseDungeonWidth: 100
   baseDungeonHeight: 100
   corridorWidth: 4
+  wallHeight: 6
   minSplits: 10
   maxSplits: 13
   roomMinHeightAcceptance: 40
