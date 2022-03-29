@@ -111,7 +111,7 @@ public class DungeonDrawer
 
         string objectName = "Corridor " + node.name + " to " + node2.name; 
         Color color = Color.black;
-        GameObject corridor = this.CreateQuad(this.corridors, objectName, 0.02f, corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight, color);
+        GameObject corridor = this.CreateQuad(this.corridors, objectName, 0.5f, corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight, color);
         
         wall1.transform.localScale += Vector3.up * this.wallHeight;
         wall2.transform.localScale += Vector3.up * this.wallHeight;
