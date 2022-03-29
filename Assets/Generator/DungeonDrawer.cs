@@ -12,6 +12,7 @@ public class DungeonDrawer
     private float corridorWidth;
     private float wallHeight;
 
+    // Class that draws partitions, rooms, corridors.
     public DungeonDrawer(GameObject parent, float corridorWidth, float wallHeight) {
         this.parent = parent;
         // Create parent objects to organise in hierarchy
@@ -32,8 +33,7 @@ public class DungeonDrawer
     }
 
     public void DrawRoom(Node node) {
-        Color color = Color.black;
-        node.quadRoom = this.CreateQuad(this.rooms, "Room " + node.name, 0.02f, node.roomBottomLeft, node.roomBottomRight, node.roomTopLeft, node.roomTopRight, color);
+        node.quadRoom = this.CreateQuad(this.rooms, "Room " + node.name, 0.02f, node.roomBottomLeft, node.roomBottomRight, node.roomTopLeft, node.roomTopRight, Settings.groundColor);
     }
 
     public void DrawPartition(Node node) {
@@ -110,13 +110,13 @@ public class DungeonDrawer
         node2.corridorExits.Add(nodeExit2);
 
         string objectName = "Corridor " + node.name + " to " + node2.name; 
-        Color color = Color.black;
-        GameObject corridor = this.CreateQuad(this.corridors, objectName, 0.5f, corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight, color);
+
+        GameObject corridor = this.CreateQuad(this.corridors, objectName, 0.5f, corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight, Settings.groundColor);
         
         wall1.transform.localScale += Vector3.up * this.wallHeight;
         wall2.transform.localScale += Vector3.up * this.wallHeight;
-        wall1.GetComponent<Renderer>().material.color = Color.black;
-        wall2.GetComponent<Renderer>().material.color = Color.black;
+        wall1.GetComponent<Renderer>().material.color = Settings.wallColor;
+        wall2.GetComponent<Renderer>().material.color = Settings.wallColor;
         wall1.transform.parent = corridor.transform;
         wall2.transform.parent = corridor.transform;
     }

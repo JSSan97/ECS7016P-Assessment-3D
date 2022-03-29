@@ -4,17 +4,11 @@ using UnityEngine;
 
 public class Tile
 {
-    enum tileTypes {Ground, Grass, Wall}; 
-
-    Node room;
-    string type;
-    Vector3 position;
-    float wallHeight;
-
-    // Colors
-    private Color wallColor = new Color(33.0f/255.0f, 3.0f/255.0f, 1.0f/255.0f, 1.0f);
-    private Color groundColor = new Color(71.0f/255.0f, 55.0f/255.0f, 54.0f/255.0f, 1.0f);
-    private Color grassColor = new Color(33.0f/255.0f, 180.0f/255.0f, 40.0f/255.0f, 1.0f);
+    private Node room; 
+    private string type; // Ground, Grass, Wall, Water
+    private Vector3 position; // Position of game object
+    private float wallHeight;
+    private GameObject tile;
 
     public Tile(Node room, string type, Vector3 position, float wallHeight) {
         this.room = room;
@@ -25,28 +19,32 @@ public class Tile
     }
 
     private void CreateTile() {
-        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cube.transform.parent = this.room.quadRoom.transform;
-        cube.transform.localPosition = position;
+        tile = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        tile.transform.parent = this.room.quadRoom.transform;
+        tile.transform.localPosition = position;
 
         switch (this.type) {
             case "Ground":
-                cube.GetComponent<Renderer>().material.color = groundColor;
-                cube.name = "Ground Tile";
-                cube.tag = "Ground";
+                tile.GetComponent<Renderer>().material.color = Settings.groundColor;
+                tile.name = "Ground Tile";
+                tile.tag = "Ground";
                 break;
             case "Grass":
-                cube.GetComponent<Renderer>().material.color = grassColor;
-                cube.name = "Grass Tile";
-                cube.tag = "Grass";
+                tile.GetComponent<Renderer>().material.color = Settings.grassColor;
+                tile.name = "Grass Tile";
+                tile.tag = "Grass";
                 break;
             case "Wall":
-                cube.transform.localScale += Vector3.up * wallHeight;
-                cube.GetComponent<Renderer>().material.color = wallColor;
-                cube.name = "Wall Tile";
-                cube.tag = "Wall";
+                tile.transform.localScale += Vector3.up * wallHeight;
+                tile.GetComponent<Renderer>().material.color = Settings.wallColor;
+                tile.name = "Wall Tile";
+                tile.tag = "Wall";
+                break;
+            case "Water":
+                tile.GetComponent<Renderer>().material.color = Settings.waterColor;
+                tile.name = "Water Tile";
+                tile.tag = "Water";
                 break;
         }
     }
-
 }
