@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BSPGenerator : MonoBehaviour
+public class Generator : MonoBehaviour
 {
     // Use dungeon in the Hierarchy
     public GameObject baseDungeon;
@@ -276,5 +276,4 @@ public class BSPGenerator : MonoBehaviour
             dungeonDrawer.PopulateRoom(node);
         }        
     }
-
 }

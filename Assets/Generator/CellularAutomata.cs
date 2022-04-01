@@ -36,7 +36,7 @@ public class CellularAutomata
         AssignFillPercent();
         CreateRoomNoise();
         OpenCorridors();
-        FillRoomNoise();
+        FillWallNoise();
         CreateGrassNoise();
         FillGrassNoise();
         DrawTiles(wallHeight);
@@ -45,8 +45,8 @@ public class CellularAutomata
     public void AssignFillPercent() {
         float height = Vector3.Distance(node.roomTopRight, node.roomBottomRight);
         float width = Vector3.Distance(node.roomBottomLeft, node.roomBottomRight);
-        this.wallFillPercent = Random.Range(25, 40);
-        this.grassFillPercent = Random.Range(50, 60);
+        this.wallFillPercent = Random.Range(30, 45);
+        this.grassFillPercent = Random.Range(50, 65);
         this.waterFillPercent = Random.Range(50, 60);
 
         if (width < 10.0f || height < 10.0f) {
@@ -77,7 +77,7 @@ public class CellularAutomata
         }
     }
 
-    private void FillRoomNoise() {
+    private void FillWallNoise() {
 		for (int i = 0; i < 5; i ++) {
 			SmoothWalls();
 		}
@@ -118,11 +118,11 @@ public class CellularAutomata
                     try {
                         wallMap[Mathf.RoundToInt(vertice1.x), i] = 0;
                     } catch (System.IndexOutOfRangeException e) {
-                        if(vertice1.x != 0) {
-                            Debug.Log("IndexOutOfRange Exception for room " + node.name);
-                            Debug.Log("vertice1.x = " + vertice1.x + ". i = " + i);
-                            wallMap[Mathf.RoundToInt(vertice1.x) - 1, i] = 0;
-                        }
+                        Debug.Log("IndexOutOfRange Exception for room " + node.name);
+                        Debug.Log("Corridor[0] = " + corridor[0]);
+                        Debug.Log("Corridor[1] = " + corridor[1]);
+                        Debug.Log("vertice1.x = " + vertice1.x + ". i = " + i);
+                        continue;
                     }
                     if(vertice1.x == 0) {
                         wallMap[Mathf.RoundToInt(vertice1.x) + 1, i] = 0;
@@ -131,7 +131,6 @@ public class CellularAutomata
                     }
                 }
             }
-
         }
     }
 
