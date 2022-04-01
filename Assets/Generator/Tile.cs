@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Tile
 {
-    private Node room; 
+    private BSPNode room; 
     private string type; // Ground, Grass, Wall, Water
     private Vector3 position; // Position of game object
     private float wallHeight;
     private GameObject tile;
 
-    public Tile(Node room, string type, Vector3 position, float wallHeight) {
+    public Tile(BSPNode room, string type, Vector3 position, float wallHeight) {
         this.room = room;
         this.type = type;
         this.position = position;

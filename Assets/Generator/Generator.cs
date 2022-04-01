@@ -78,7 +78,7 @@ public class Generator : MonoBehaviour
     private void BuildBSP()
     {
         // Record a queue of nodes that need to be partitioned
-        LinkedList<Node> queue = new LinkedList<Node>();
+        LinkedList<BSPNode> queue = new LinkedList<BSPNode>();
 
         // Start with parent node
         queue.AddFirst(BSPTree.GetRoot());
@@ -88,7 +88,7 @@ public class Generator : MonoBehaviour
                 break;
 
             // Get first item in queue
-            Node parent = queue.First.Value;
+            BSPNode parent = queue.First.Value;
             queue.RemoveFirst();
 
             // Choose partition direction
@@ -118,7 +118,7 @@ public class Generator : MonoBehaviour
     private void BuildPartitions()
     {
         // Display all leaf quads/partitions
-        foreach (Node node in BSPTree.GetLeafNodes()) {
+        foreach (BSPNode node in BSPTree.GetLeafNodes()) {
             dungeonDrawer.DrawPartition(node);
         }
     }
@@ -126,7 +126,7 @@ public class Generator : MonoBehaviour
     private void BuildRooms() 
     {
         // Draw all leaf node rooms
-        foreach (Node node in BSPTree.GetLeafNodes()) {
+        foreach (BSPNode node in BSPTree.GetLeafNodes()) {
             node.UpdateRoomSpace();
             dungeonDrawer.DrawRoom(node);
         }
@@ -136,10 +136,10 @@ public class Generator : MonoBehaviour
     {
         int currentDepth = BSPTree.GetMaxDepth() - 1;
         // Draw all corridors of children, starting from the lowest level
-        List<Node> parents;
+        List<BSPNode> parents;
         parents = BSPTree.GetNodesAtDepth(currentDepth);
         // Starting from the lowest level
-        foreach (Node node in parents) {
+        foreach (BSPNode node in parents) {
             if(node.leftNode != null && node.rightNode != null) {
                 dungeonDrawer.DrawCorridors(node.leftNode, node.rightNode);
             }
@@ -148,18 +148,18 @@ public class Generator : MonoBehaviour
 
         while(currentDepth > -1) {
             parents = BSPTree.GetNodesAtDepth(currentDepth);
-            foreach (Node node in parents) {
+            foreach (BSPNode node in parents) {
                 if(node.leftNode != null && node.rightNode != null) {
                     // Get left and right leaf children of the node
-                    List<Node> leftChildren = BSPTree.GetLeafNodes(node.leftNode);
-                    List<Node> rightChildren = BSPTree.GetLeafNodes(node.rightNode);
+                    List<BSPNode> leftChildren = BSPTree.GetLeafNodes(node.leftNode);
+                    List<BSPNode> rightChildren = BSPTree.GetLeafNodes(node.rightNode);
 
-                    Node node1 = null;
-                    Node node2 = null;
+                    BSPNode node1 = null;
+                    BSPNode node2 = null;
                     float minDistance = 0;
 
-                    foreach(Node leftNode in leftChildren) {
-                        foreach(Node rightNode in rightChildren) {
+                    foreach(BSPNode leftNode in leftChildren) {
+                        foreach(BSPNode rightNode in rightChildren) {
                             float tempDistance = Vector3.Distance(leftNode.GetRoomCentre(), rightNode.GetRoomCentre());
 
                             if((node1 == null) || (tempDistance < minDistance) ) {
@@ -176,7 +176,7 @@ public class Generator : MonoBehaviour
         }
     }
 
-    private bool isAcceptableSize(Node node, int splitDirection)
+    private bool isAcceptableSize(BSPNode node, int splitDirection)
     {
         if(splitDirection == 1) {
             // Get height of the room
@@ -190,7 +190,7 @@ public class Generator : MonoBehaviour
         }
     }
 
-    private int getPartitionDirection(Node node)
+    private int getPartitionDirection(BSPNode node)
     {
         float height = Vector3.Distance(node.topRight, node.bottomRight);
         float width = Vector3.Distance(node.bottomLeft, node.bottomRight);
@@ -209,7 +209,7 @@ public class Generator : MonoBehaviour
         return splitDirection;
     }
 
-    private float getPartitionPosition(int splitDirection, Node node) 
+    private float getPartitionPosition(int splitDirection, BSPNode node) 
     {
         float splitPosition;
         // Offset as the position could result in extremely narrow partitions without it
@@ -229,12 +229,12 @@ public class Generator : MonoBehaviour
         return splitPosition;
     }
 
-    private void partitionCell(Node node, int splitDirection, float splitPosition)
+    private void partitionCell(BSPNode node, int splitDirection, float splitPosition)
     {
         // Create new child nodes with corner information and add to tree
         Vector3 bottomLeft, bottomRight, topLeft, topRight;
-        Node child1;
-        Node child2;
+        BSPNode child1;
+        BSPNode child2;
         if(splitDirection == 1) {
             // Horizontal Bottom
             bottomLeft = node.bottomLeft;
@@ -271,7 +271,7 @@ public class Generator : MonoBehaviour
     }
 
     private void PopulateRooms(){
-        foreach (Node node in BSPTree.GetLeafNodes()) {
+        foreach (BSPNode node in BSPTree.GetLeafNodes()) {
             node.UpdateRoomSpace();
             dungeonDrawer.PopulateRoom(node);
         }        

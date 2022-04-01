@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class BinaryTree
 {
-    private Node root { get; set; }
-    private List<Node> leafNodes { get; set; } = new List<Node>();
+    private BSPNode root { get; set; }
+    private List<BSPNode> leafNodes { get; set; } = new List<BSPNode>();
     private int depth = 0;
 
     public void AddRootNode(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topLeft, Vector3 topRight) {
-        Node newNode = new Node(bottomLeft, bottomRight, topLeft, topRight);
+        BSPNode newNode = new BSPNode(bottomLeft, bottomRight, topLeft, topRight);
         //Tree is empty
         if (this.root == null)
             this.root = newNode;
     }
 
-    public Node AddChildNode(Node parent, Vector3 bottomLeft, Vector3 bottomRight, Vector3 topLeft, Vector3 topRight) {
-        Node childNode = new Node(bottomLeft, bottomRight, topLeft, topRight);
+    public BSPNode AddChildNode(BSPNode parent, Vector3 bottomLeft, Vector3 bottomRight, Vector3 topLeft, Vector3 topRight) {
+        BSPNode childNode = new BSPNode(bottomLeft, bottomRight, topLeft, topRight);
 
         if(parent.leftNode == null) {
             // If left child does not exist, add new node to left branch
@@ -36,11 +36,11 @@ public class BinaryTree
         return childNode;
     }
 
-    public Node GetLeftChild(Node parent) {
+    public BSPNode GetLeftChild(BSPNode parent) {
         return parent.leftNode;
     }
 
-    public Node GetRightChild(Node parent) {
+    public BSPNode GetRightChild(BSPNode parent) {
         return parent.rightNode;
     }
 
@@ -48,7 +48,7 @@ public class BinaryTree
         // If root does not exist
         if (root == null)
             return;
-        leafNodes = new List<Node>();
+        leafNodes = new List<BSPNode>();
         SearchLeafNodes(root, leafNodes);
         this.leafNodes = leafNodes;
     }
@@ -57,13 +57,13 @@ public class BinaryTree
         this.depth = GetMaxDepth(this.root) - 1;
     }
 
-    public List<Node> GetLeafNodes(Node node) {
-        List<Node> leafNodesFromParent = new List<Node>();
+    public List<BSPNode> GetLeafNodes(BSPNode node) {
+        List<BSPNode> leafNodesFromParent = new List<BSPNode>();
         SearchLeafNodes(node, leafNodesFromParent);
         return leafNodesFromParent;
     }
 
-    private void SearchLeafNodes(Node parent, List<Node> list) {
+    private void SearchLeafNodes(BSPNode parent, List<BSPNode> list) {
         // If node is leaf node (no left or right child)
         if(parent.leftNode == null && parent.rightNode == null)
             list.Add(parent);
@@ -77,13 +77,13 @@ public class BinaryTree
             SearchLeafNodes(parent.rightNode, list);
     }
 
-    public List<Node> GetNodesAtDepth(int level) {
-        List<Node> list = new List<Node>();
+    public List<BSPNode> GetNodesAtDepth(int level) {
+        List<BSPNode> list = new List<BSPNode>();
         this.SearchNodesAtDepth(this.root, level, list);
         return list;
     }
 
-    private void SearchNodesAtDepth(Node node, int level, List<Node> list) {
+    private void SearchNodesAtDepth(BSPNode node, int level, List<BSPNode> list) {
         // If node is leaf node (no left or right child)
         if(node.depth == level) {
             list.Add(node);
@@ -100,7 +100,7 @@ public class BinaryTree
             SearchNodesAtDepth(node.rightNode, level, list);
     }
     
-    private int GetMaxDepth(Node root) {
+    private int GetMaxDepth(BSPNode root) {
         if(root == null) {
             return 0;
         }
@@ -116,11 +116,11 @@ public class BinaryTree
         }
     }
 
-    public Node GetRoot() {
+    public BSPNode GetRoot() {
         return this.root;
     }
 
-    public List<Node> GetLeafNodes() {
+    public List<BSPNode> GetLeafNodes() {
         return this.leafNodes;
     }
 

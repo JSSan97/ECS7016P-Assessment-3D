@@ -5,17 +5,17 @@ using UnityEngine;
 /* Nodes represent a partitioned cell.
 /  Contains information about the space of the cell and a room.
 */
-public class Node
+public class BSPNode
 { 
     // Parent
-    public Node parent;
+    public BSPNode parent;
 
     // Sibling
-    public Node sibling;
+    public BSPNode sibling;
 
     // Left and right children
-    public Node leftNode { get; set; }
-    public Node rightNode { get; set; }
+    public BSPNode leftNode { get; set; }
+    public BSPNode rightNode { get; set; }
 
     // Initial Space allowed
     public Vector3 bottomLeft  { get; set; }
@@ -40,10 +40,10 @@ public class Node
     // Name - Helps identify objects in hierarchy, parents and position
     public string name { get; set; }
 
-    // Depth of node
+    // Depth of BSPNode
     public int depth { get; set; } = 0;
 
-    public Node(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topLeft, Vector3 topRight) {
+    public BSPNode(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topLeft, Vector3 topRight) {
         this.bottomLeft = bottomLeft;
         this.bottomRight = bottomRight;
         this.topLeft = topLeft;

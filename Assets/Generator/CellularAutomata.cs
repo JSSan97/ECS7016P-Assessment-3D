@@ -5,7 +5,7 @@ using UnityEngine;
 public class CellularAutomata
 {
     // Node, record of all room information
-    Node node;
+    BSPNode node;
     // Room Width
     private int width;
     // Room Height
@@ -23,7 +23,7 @@ public class CellularAutomata
     private int waterFillPercent;
 
 
-    public CellularAutomata(Node node) {
+    public CellularAutomata(BSPNode node) {
         this.height = Mathf.RoundToInt(Vector3.Distance(node.roomTopRight, node.roomBottomRight)) + 1;
         this.width = Mathf.RoundToInt(Vector3.Distance(node.roomBottomLeft, node.roomBottomRight)) + 1;
         this.node = node;

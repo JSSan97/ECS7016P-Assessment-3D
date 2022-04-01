@@ -27,21 +27,21 @@ public class DungeonDrawer
         this.wallHeight = wallHeight;
     }
 
-    public void PopulateRoom(Node node) {
+    public void PopulateRoom(BSPNode node) {
         CellularAutomata cellularAutomata = new CellularAutomata(node);
         cellularAutomata.PopulateRoom(this.wallHeight);
     }
 
-    public void DrawRoom(Node node) {
+    public void DrawRoom(BSPNode node) {
         node.quadRoom = this.CreateQuad(this.rooms, "Room " + node.name, 0.02f, node.roomBottomLeft, node.roomBottomRight, node.roomTopLeft, node.roomTopRight, Settings.groundColor);
     }
 
-    public void DrawPartition(Node node) {
+    public void DrawPartition(BSPNode node) {
         Color randomColor = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1.0f);
         node.quadSpace = this.CreateQuad(this.partitions, "Quad " + node.name, 0.01f, node.bottomLeft, node.bottomRight, node.topLeft, node.topRight, randomColor);
     }
 
-    public void DrawCorridors(Node node, Node node2) {
+    public void DrawCorridors(BSPNode node, BSPNode node2) {
         // Find the two corner vectors which have the closest vectors of its siblings
         // Horizontal split
         float distance1 = Vector3.Distance(node.roomTopRight, node2.roomBottomRight);
