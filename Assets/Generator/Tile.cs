@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class Tile
 {
+    // The room to which the tile belongs to.
     private BSPNode room; 
-    private string type; // Ground, Grass, Wall, Water
-    private Vector3 position; // Position of game object
+    // Ground, Grass, Wall, Water
+    private string type; 
+    // Position of game object tile
+    private Vector3 position; 
+    // How heigh the walls should be for wall tiles.
     private float wallHeight;
+    // The actual tile came object.
     private GameObject tile;
 
     public Tile(BSPNode room, string type, Vector3 position, float wallHeight) {
@@ -19,10 +24,12 @@ public class Tile
     }
 
     private void CreateTile() {
+        // Create a cube at the position designated and under the room gameobject.
         tile = GameObject.CreatePrimitive(PrimitiveType.Cube);
         tile.transform.parent = this.room.quadRoom.transform;
         tile.transform.localPosition = position;
 
+        // For the tile, set the color, name and tag.
         switch (this.type) {
             case "Ground":
                 tile.GetComponent<Renderer>().material.color = Settings.groundColor;

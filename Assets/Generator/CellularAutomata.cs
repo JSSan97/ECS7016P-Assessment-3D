@@ -22,33 +22,43 @@ public class CellularAutomata
     private int grassFillPercent;
     private int waterFillPercent;
 
-
+    // Class to aid in the population of tiles in the room using Cellulalar Automata technique.
     public CellularAutomata(BSPNode node) {
         this.height = Mathf.RoundToInt(Vector3.Distance(node.roomTopRight, node.roomBottomRight)) + 1;
         this.width = Mathf.RoundToInt(Vector3.Distance(node.roomBottomLeft, node.roomBottomRight)) + 1;
         this.node = node;
+        // Maps that tell us where to place certain tiles in the room.
         wallMap = new int[width,height];
         grassMap = new int[width, height];
         waterMap = new int[width, height];
     }
 
     public void PopulateRoom(float wallHeight) {
+        // Assign how much tiles should be in a room
         AssignFillPercent();
+        // Start with noise for the wall tiles
         CreateRoomNoise();
+        // Open corridors so they are not closed in the cellular automata 
         OpenCorridors();
+        // Use the noise and cellular automata to smooth out the walls.
         FillWallNoise();
-        CreateGrassNoise();
-        FillGrassNoise();
+        // Now create noise for grass and water
+        CreateGrassWaterNoise();
+        // Use the noise and cellular automata to set the grass and water tiles
+        FillGrassWaterNoise();
+        // Draw tiles wrapper method
         DrawTiles(wallHeight);
     }
 
     public void AssignFillPercent() {
-        float height = Vector3.Distance(node.roomTopRight, node.roomBottomRight);
-        float width = Vector3.Distance(node.roomBottomLeft, node.roomBottomRight);
+        // Set the expected noise for the wall, grass, water tiles
         this.wallFillPercent = Random.Range(30, 45);
         this.grassFillPercent = Random.Range(50, 65);
         this.waterFillPercent = Random.Range(50, 60);
 
+        // We don't want too much cellular automata in narrow/small rooms.
+        float height = Vector3.Distance(node.roomTopRight, node.roomBottomRight);
+        float width = Vector3.Distance(node.roomBottomLeft, node.roomBottomRight);
         if (width < 10.0f || height < 10.0f) {
             Debug.Log("Room " + node.name + " has a room length smaller than 10");
             this.wallFillPercent = Random.Range(10, 20);
@@ -78,6 +88,7 @@ public class CellularAutomata
     }
 
     private void FillWallNoise() {
+        // Smooth out walls 5 times.
 		for (int i = 0; i < 5; i ++) {
 			SmoothWalls();
 		}
@@ -99,10 +110,13 @@ public class CellularAutomata
 	}
 
     private void OpenCorridors(){
+        // We do not want the corridors to be blocked by wall tiles
+        // So set the areas to the corridors to 0 in the map
         foreach(List<Vector3> corridor in node.corridorExits) {
             Vector3 vertice1 = corridor[0] - node.roomBottomLeft;
             Vector3 vertice2 = corridor[1] - node.roomBottomLeft;
 
+            // Unblock corridors in the top and bottom sides of the room
             if(vertice1.z == vertice2.z) {
                 for(int i = (int) vertice1.x; i < (int) vertice2.x; i++) {
                     wallMap[i, Mathf.RoundToInt(vertice1.z)] = 0;
@@ -114,6 +128,7 @@ public class CellularAutomata
                 }
             }
             else if (vertice1.x == vertice2.x) {
+                // Unblock corridors in the left and right sides of the room
                 for(int i= (int) vertice1.z; i < (int) vertice2.z; i++) {
                     try {
                         wallMap[Mathf.RoundToInt(vertice1.x), i] = 0;
@@ -154,7 +169,7 @@ public class CellularAutomata
 		return wallCount;
 	}
 
-    private void CreateGrassNoise() {
+    private void CreateGrassWaterNoise() {
         // Random Seed
         string seed = Time.time.ToString();
         System.Random pseudoRandom = new System.Random(seed.GetHashCode());
@@ -174,7 +189,8 @@ public class CellularAutomata
         }
     }
 
-    private void FillGrassNoise() {
+    private void FillGrassWaterNoise() {
+        // Run five times to smooth out the grass and water
 		for (int i = 0; i < 5; i ++) {
             this.grassMap = SmoothTiles(this.grassMap, 4);
             this.waterMap = SmoothTiles(this.waterMap, 3);
@@ -182,6 +198,7 @@ public class CellularAutomata
     }
 
     private int[,] SmoothTiles(int[,] map, int rule) {
+        // Smooth out the noise of grass an water tiles using moores neighbourhood.
         int[,] tempMap = new int[width,height];
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
@@ -198,19 +215,8 @@ public class CellularAutomata
         return tempMap;
     }
 
-    private int GetSurroundingGrassCount(int gridX, int gridY) {
-        int grassCount = 0;
-        // Look only up, down, left, right (Von Neumann Neighborhood)
-        if(gridX - 1 >= 0 && gridX + 1 < width && gridY - 1 >= 0 && gridY + 1 < height) {
-            grassCount += grassMap[gridX - 1, gridY];
-            grassCount += grassMap[gridX + 1, gridY];
-            grassCount += grassMap[gridX, gridY + 1];
-            grassCount += grassMap[gridX, gridY - 1];
-        }
-        return grassCount;
-    }
-
     public void DrawTiles(float wallHeight) {
+        // Now using the maps, start drawing out the tiles.
         for (int x=0; x < width; x++) {
             for (int y=0; y < height; y++) {
                 Vector3 pos = new Vector3(x + .5f,0, y + .5f);

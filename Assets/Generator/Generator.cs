@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Generator : MonoBehaviour
 {
-    // Use dungeon in the Hierarchy
+    // Use dungeon in the hierarchy
     public GameObject baseDungeon;
     // Main Camera of the hierarchy
     public GameObject mainCamera;
@@ -58,6 +58,7 @@ public class Generator : MonoBehaviour
 
     void SetupBaseDungeon()
     {
+        // How many times partitioning should take place.
         randomSplits = Random.Range(minSplits, maxSplits + 1);
         // Scale and Orientate Dungeon, bottom left corner is (0, 0, 0) -> Easier to do maths
         baseDungeon.transform.localScale = new Vector3(baseDungeonWidth, baseDungeonHeight, 1);
@@ -91,7 +92,7 @@ public class Generator : MonoBehaviour
             BSPNode parent = queue.First.Value;
             queue.RemoveFirst();
 
-            // Choose partition direction
+            // Choose partition direction, horizontal or vertical
             int splitDirection = getPartitionDirection(parent);
 
             if(isAcceptableSize(parent, splitDirection)) {
@@ -231,7 +232,7 @@ public class Generator : MonoBehaviour
 
     private void partitionCell(BSPNode node, int splitDirection, float splitPosition)
     {
-        // Create new child nodes with corner information and add to tree
+        // Create new child nodes with vector3 corner position and add to tree
         Vector3 bottomLeft, bottomRight, topLeft, topRight;
         BSPNode child1;
         BSPNode child2;

@@ -12,37 +12,45 @@ public class DungeonDrawer
     private float corridorWidth;
     private float wallHeight;
 
-    // Class that draws partitions, rooms, corridors.
+    // Class that draws partitions, rooms, corridors (but does not populate the rooms)
     public DungeonDrawer(GameObject parent, float corridorWidth, float wallHeight) {
         this.parent = parent;
         // Create parent objects to organise in hierarchy
         this.partitions = new GameObject("Partitions");
         this.rooms = new GameObject("Rooms");
         this.corridors = new GameObject("Corridors");
-
         partitions.transform.parent = parent.transform;
         rooms.transform.parent = parent.transform;
         corridors.transform.parent = parent.transform;
+        // For drawing the corridor, how high do we want the walls to be and how wide.
         this.corridorWidth = corridorWidth;
         this.wallHeight = wallHeight;
     }
 
     public void PopulateRoom(BSPNode node) {
+        // Populate room with tiles.
         CellularAutomata cellularAutomata = new CellularAutomata(node);
         cellularAutomata.PopulateRoom(this.wallHeight);
     }
 
     public void DrawRoom(BSPNode node) {
+        // Draw a quad for the room, technically this isn't necessary once the rooms are populated
+        // but useful to see the generated room space you have (and for debugging).
         node.quadRoom = this.CreateQuad(this.rooms, "Room " + node.name, 0.02f, node.roomBottomLeft, node.roomBottomRight, node.roomTopLeft, node.roomTopRight, Settings.groundColor);
     }
 
     public void DrawPartition(BSPNode node) {
+        // Draw a quad for the partioning, technically this isn't necessary once the rooms are populated
+        // but useful to see how much space you have in a partition to draw rooms (and for debugging).
         Color randomColor = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1.0f);
         node.quadSpace = this.CreateQuad(this.partitions, "Quad " + node.name, 0.01f, node.bottomLeft, node.bottomRight, node.topLeft, node.topRight, randomColor);
     }
 
     public void DrawCorridors(BSPNode node, BSPNode node2) {
-        // Find the two corner vectors which have the closest vectors of its siblings
+        // We want to draw corridors between two nodes, this method overcomes the challenge of 
+        // deciding whether they are horizontal or verticle doors. To do this we can
+        // find the two corner vectors which have the closest vectors of its siblings
+
         // Horizontal split
         float distance1 = Vector3.Distance(node.roomTopRight, node2.roomBottomRight);
         // Vertical split
@@ -53,11 +61,13 @@ public class DungeonDrawer
     
         Vector3 corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight;
 
+        // Draw cubes to be used as walls.
         GameObject wall1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
         GameObject wall2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
         if (distance1 < distance2) {
-            // Vertical split (corridor going left and right)
+            // Vertical split (let's draw a corridor going left and right)
+            // We want to  make sure the corridors connect where each room may be of varying sizes, so ensure its between the room edges.
             float minimumX = (node2.roomBottomLeft.x > node.roomTopLeft.x) ? node2.roomBottomLeft.x : node.roomTopLeft.x;
             float maximumX = (node2.roomBottomRight.x < node.roomTopRight.x) ? node2.roomBottomRight.x : node.roomTopRight.x;
 
@@ -82,7 +92,8 @@ public class DungeonDrawer
             wall2.transform.localScale += Vector3.forward * (this.corridorWidth + 1);
 
         } else {
-            // Horizontal Split (corridor going up and down)
+            // Horizontal Split (let's draw a corridor going up and down)
+            // We want to  make sure the corridors connect where each room may be of varying sizes, so ensure its between the room edges.
             float minimumY = (node2.roomBottomLeft.z > node.roomBottomRight.z) ? node2.roomBottomLeft.z : node.roomBottomRight.z;
             float maximumY = (node2.roomTopRight.z < node.roomTopLeft.z) ? node2.roomTopRight.z : node.roomTopLeft.z;
 
@@ -110,9 +121,9 @@ public class DungeonDrawer
         node2.corridorExits.Add(nodeExit2);
 
         string objectName = "Corridor " + node.name + " to " + node2.name; 
-
         GameObject corridor = this.CreateQuad(this.corridors, objectName, 0.5f, corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight, Settings.groundColor);
         
+        // More settings for the walls
         wall1.transform.localScale += Vector3.up * this.wallHeight;
         wall2.transform.localScale += Vector3.up * this.wallHeight;
         wall1.GetComponent<Renderer>().material.color = Settings.wallColor;

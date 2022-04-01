@@ -51,6 +51,7 @@ public class BSPNode
     }
 
     public void UpdateRoomSpace() {
+        // Set the corners of the room given the full partitioning space allowed.
         float height = Vector3.Distance(this.topRight, this.bottomRight);
         float width = Vector3.Distance(this.bottomLeft, this.bottomRight);
         float offset = 3.0f;
