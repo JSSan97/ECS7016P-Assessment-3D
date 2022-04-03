@@ -133,10 +133,10 @@ public class CellularAutomata
                     try {
                         wallMap[Mathf.RoundToInt(vertice1.x), i] = 0;
                     } catch (System.IndexOutOfRangeException e) {
-                        Debug.Log("IndexOutOfRange Exception for room " + node.name);
-                        Debug.Log("Corridor[0] = " + corridor[0]);
-                        Debug.Log("Corridor[1] = " + corridor[1]);
-                        Debug.Log("vertice1.x = " + vertice1.x + ". i = " + i);
+                        // Debug.Log("IndexOutOfRange Exception for room " + node.name);
+                        // Debug.Log("Corridor[0] = " + corridor[0]);
+                        // Debug.Log("Corridor[1] = " + corridor[1]);
+                        // Debug.Log("vertice1.x = " + vertice1.x + ". i = " + i);
                         continue;
                     }
                     if(vertice1.x == 0) {

@@ -8,26 +8,23 @@ public class HunterBT : MonoBehaviour
 {
     // How fast the wolf moves
     public float speed = 5;
+
+
     // The wolf's behaviour tree
     private Root tree;              
     // The wolf's behaviour blackboard  
     private Blackboard blackboard;
     // The current behaviour
-    CustomBehaviour behaviour;
+    private CustomBehaviour behaviour;
 
-
-    private void Awake() {
-        SteeringBasics steeringBasics = GetComponent<SteeringBasics>();
-        Wander2 wander = GetComponent<Wander2>();
-        behaviour = new CustomWander(steeringBasics, wander);
-    }
-    
+    private SteeringBasics steeringBasics;
+    private Wander2 wander;
 
     private void Start()
     {
-        // tree = CreateBehaviourTree();
-        // blackboard = tree.Blackboard;
-        // tree.Start()
+        steeringBasics = GetComponent<SteeringBasics>();
+        wander = GetComponent<Wander2>();
+        behaviour = new CustomWander(steeringBasics, wander);
     }
 
     private void FixedUpdate() {
