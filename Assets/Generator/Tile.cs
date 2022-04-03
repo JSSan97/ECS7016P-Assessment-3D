@@ -38,6 +38,8 @@ public class Tile
                 break;
             case "Grass":
                 tile.GetComponent<Renderer>().material.color = Settings.grassColor;
+                tile.transform.localScale += Vector3.up;
+                tile.GetComponent<BoxCollider>().isTrigger = true;
                 tile.name = "Grass Tile";
                 tile.tag = "Grass";
                 break;
@@ -49,6 +51,9 @@ public class Tile
                 break;
             case "Water":
                 tile.GetComponent<Renderer>().material.color = Settings.waterColor;
+                tile.transform.localScale += Vector3.down * 0.25f;
+                tile.GetComponent<BoxCollider>().size = new Vector3(1, 1.75f, 1);
+                tile.GetComponent<BoxCollider>().isTrigger = true;
                 tile.name = "Water Tile";
                 tile.tag = "Water";
                 break;
