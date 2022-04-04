@@ -291,6 +291,8 @@ public class Generator : MonoBehaviour
     }
 
     private void AddAgents(){
+        int totalGnomeCount = 1;
+        int totalHunterCount = 1;
         // Add hunters and gnomes for each room
         float gnomeRadius = prefabGnome.GetComponent<SphereCollider>().radius;
         float hunterRadius = prefabHunter.GetComponent<SphereCollider>().radius;
@@ -304,8 +306,10 @@ public class Generator : MonoBehaviour
                 float z = Random.Range(node.roomBottomLeft.z, node.roomTopLeft.z);
                 Vector3 position = new Vector3(x, 0.7f, z);
 
-                Instantiate(prefabGnome, position, Quaternion.identity);
+                GameObject gnome = Instantiate(prefabGnome, position, Quaternion.identity);
+                gnome.name = "Gnome " + totalGnomeCount;
                 gnomeCount += 1;
+                totalGnomeCount +=1;
             }
 
             while(hunterCount < this.hunterPerRoom) {
@@ -313,8 +317,10 @@ public class Generator : MonoBehaviour
                 float z = Random.Range(node.roomBottomLeft.z, node.roomTopLeft.z);
                 Vector3 position = new Vector3(x, 0.7f, z);
 
-                Instantiate(prefabHunter, position, Quaternion.identity);
+                GameObject hunter = Instantiate(prefabHunter, position, Quaternion.identity);
+                hunter.name = "Hunter " + totalHunterCount;
                 hunterCount += 1;
+                totalHunterCount += 1;
             }
         }
     }

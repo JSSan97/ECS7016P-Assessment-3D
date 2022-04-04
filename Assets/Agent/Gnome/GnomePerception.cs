@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GnomePerception : MonoBehaviour
 {
-    public GameObject nearestWaterTile;
-    public GameObject nearestGrassTile;
+    private GameObject nearestWaterTile;
+    private GameObject nearestGrassTile;
 
     private GameObject gnome;
 
@@ -19,7 +19,7 @@ public class GnomePerception : MonoBehaviour
                 if(nearestWaterTile == null) {
                     nearestWaterTile = other.gameObject;
                 } else {
-                    nearestWaterTile = switchNearestTarget(nearestWaterTile, other);
+                    nearestWaterTile = SwitchNearestTarget(nearestWaterTile, other);
                 }
 
                 break;
@@ -27,7 +27,7 @@ public class GnomePerception : MonoBehaviour
                 if(nearestGrassTile == null) {
                     nearestGrassTile = other.gameObject;
                 } else {
-                    nearestGrassTile = switchNearestTarget(nearestGrassTile, other);
+                    nearestGrassTile = SwitchNearestTarget(nearestGrassTile, other);
                 }
                 break;
         }
@@ -48,7 +48,7 @@ public class GnomePerception : MonoBehaviour
         }
     }
 
-    private GameObject switchNearestTarget(GameObject targetObject, Collider other) {
+    private GameObject SwitchNearestTarget(GameObject targetObject, Collider other) {
         float distance1 = Vector3.Distance(this.gnome.transform.position, other.gameObject.transform.position);
         float distance2 = Vector3.Distance(this.gnome.transform.position, targetObject.transform.position);
         if(distance1 < distance2) {
@@ -56,6 +56,14 @@ public class GnomePerception : MonoBehaviour
         } else {
             return targetObject;
         }
+    }
+
+    public GameObject getNearestWaterTile(){
+        return this.nearestWaterTile;
+    }
+
+    public GameObject getNearestGrassTile(){
+        return this.nearestGrassTile;
     }
 
 }
