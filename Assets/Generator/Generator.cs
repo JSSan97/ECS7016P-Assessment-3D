@@ -302,7 +302,7 @@ public class Generator : MonoBehaviour
             while(gnomeCount < this.gnomesPerRoom){
                 float x = Random.Range(node.roomBottomLeft.x, node.roomBottomRight.x);
                 float z = Random.Range(node.roomBottomLeft.z, node.roomTopLeft.z);
-                Vector3 position = new Vector3(x, 0.52f, z);
+                Vector3 position = new Vector3(x, 0.7f, z);
 
                 Instantiate(prefabGnome, position, Quaternion.identity);
                 gnomeCount += 1;
@@ -311,7 +311,7 @@ public class Generator : MonoBehaviour
             while(hunterCount < this.hunterPerRoom) {
                 float x = Random.Range(node.roomBottomLeft.x, node.roomBottomRight.x);
                 float z = Random.Range(node.roomBottomLeft.z, node.roomTopLeft.z);
-                Vector3 position = new Vector3(x, 0.52f, z);
+                Vector3 position = new Vector3(x, 0.7f, z);
 
                 Instantiate(prefabHunter, position, Quaternion.identity);
                 hunterCount += 1;

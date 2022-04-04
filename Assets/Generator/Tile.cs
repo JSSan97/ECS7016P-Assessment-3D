@@ -51,7 +51,7 @@ public class Tile
                 break;
             case "Water":
                 tile.GetComponent<Renderer>().material.color = Settings.waterColor;
-                tile.transform.localScale += Vector3.down * 0.25f;
+                tile.transform.localScale += Vector3.down * 0.1f;
                 tile.GetComponent<BoxCollider>().size = new Vector3(1, 2.0f, 1);
                 tile.GetComponent<BoxCollider>().isTrigger = true;
                 tile.name = "Water Tile";

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GnomePerception : MonoBehaviour
 {
-    private GameObject nearestWaterTile;
-    private GameObject nearestGrassTile;
+    public GameObject nearestWaterTile;
+    public GameObject nearestGrassTile;
 
     private GameObject gnome;
 
