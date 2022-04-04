@@ -223,13 +223,14 @@ public class CellularAutomata
                 Vector3 relativePosition = node.roomBottomLeft + pos;
 
                 if(wallMap[x, y] == 1) {
-                    Tile tile = new Tile(node, "Wall", relativePosition, wallHeight);
+                    new Tile(node, "Wall", relativePosition, wallHeight);
                 } else if(grassMap[x, y] == 1) {
-                    Tile tile = new Tile(node, "Grass", relativePosition, wallHeight);
+                    new Tile(node, "Ground", relativePosition, wallHeight);
+                    new Tile(node, "Grass", relativePosition, wallHeight);
                 } else if(waterMap[x, y] == 1) {
-                    Tile tile = new Tile(node, "Water", relativePosition, wallHeight);
+                    new Tile(node, "Water", relativePosition, wallHeight);
                 } else {
-                    Tile tile = new Tile(node, "Ground", relativePosition, wallHeight);
+                    new Tile(node, "Ground", relativePosition, wallHeight);
                 }
             }
         }

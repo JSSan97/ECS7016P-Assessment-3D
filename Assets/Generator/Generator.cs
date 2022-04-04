@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class Generator : MonoBehaviour
 {
+    [Header("Game Objects")]
     // Use dungeon in the hierarchy
     public GameObject baseDungeon;
     // Main Camera of the hierarchy
     public GameObject mainCamera;
+    // Prefab Gnome to be instantiated for room
+    public GameObject prefabGnome;
+    // Prefab Hunter to be instantiated for room
+    public GameObject prefabHunter;
 
+    [Header("Dungeon Settings")]
     // Set size of the whole dungeon
     public float baseDungeonWidth;
     public float baseDungeonHeight;
@@ -26,6 +32,10 @@ public class Generator : MonoBehaviour
     // Minimal Acceptable Size for Rooms
     public float roomMinHeightAcceptance;
     public float roomMinWidthAcceptance;
+
+    // How many gnomes and wolves per room
+    public int gnomesPerRoom;
+    public int hunterPerRoom;
 
     // Tree data structure to record nodes and branches
     private BinaryTree BSPTree = new BinaryTree();
@@ -54,6 +64,8 @@ public class Generator : MonoBehaviour
         BuildCorridors();
         // Populate Rooms
         PopulateRooms();
+        // Add Agents
+        AddAgents();
     }
 
     void SetupBaseDungeon()
@@ -232,7 +244,7 @@ public class Generator : MonoBehaviour
 
     private void partitionCell(BSPNode node, int splitDirection, float splitPosition)
     {
-        // Create new child nodes with vector3 corner position and add to tree
+        // Create new child nodes with vector3 corner position of partition and add to tree
         Vector3 bottomLeft, bottomRight, topLeft, topRight;
         BSPNode child1;
         BSPNode child2;
@@ -276,5 +288,34 @@ public class Generator : MonoBehaviour
             node.UpdateRoomSpace();
             dungeonDrawer.PopulateRoom(node);
         }        
+    }
+
+    private void AddAgents(){
+        // Add hunters and gnomes for each room
+        float gnomeRadius = prefabGnome.GetComponent<SphereCollider>().radius;
+        float hunterRadius = prefabHunter.GetComponent<SphereCollider>().radius;
+
+        foreach (BSPNode node in BSPTree.GetLeafNodes()) {
+            int gnomeCount = 0;
+            int hunterCount = 0;
+
+            while(gnomeCount < this.gnomesPerRoom){
+                float x = Random.Range(node.roomBottomLeft.x, node.roomBottomRight.x);
+                float z = Random.Range(node.roomBottomLeft.z, node.roomTopLeft.z);
+                Vector3 position = new Vector3(x, 0.52f, z);
+
+                Instantiate(prefabGnome, position, Quaternion.identity);
+                gnomeCount += 1;
+            }
+
+            while(hunterCount < this.hunterPerRoom) {
+                float x = Random.Range(node.roomBottomLeft.x, node.roomBottomRight.x);
+                float z = Random.Range(node.roomBottomLeft.z, node.roomTopLeft.z);
+                Vector3 position = new Vector3(x, 0.52f, z);
+
+                Instantiate(prefabHunter, position, Quaternion.identity);
+                hunterCount += 1;
+            }
+        }
     }
 }
