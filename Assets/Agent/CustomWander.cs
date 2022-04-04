@@ -16,8 +16,8 @@ public class CustomWander : CustomBehaviour
     public override void Perform()
     {
         Vector3 accel = wander.GetSteering();
-        steeringBasics.Steer(accel);
-        steeringBasics.LookWhereYoureGoing();
+        this.steeringBasics.Steer(accel);
+        this.steeringBasics.LookWhereYoureGoing();
     }
 }
 

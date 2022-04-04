@@ -20,7 +20,7 @@ public class HunterBT : MonoBehaviour
     private SteeringBasics steeringBasics;
     private Wander2 wander;
 
-    private void Start()
+    private void Awake()
     {
         steeringBasics = GetComponent<SteeringBasics>();
         wander = GetComponent<Wander2>();
