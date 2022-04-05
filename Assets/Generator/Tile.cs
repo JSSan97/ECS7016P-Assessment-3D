@@ -48,6 +48,9 @@ public class Tile
                 tile.transform.localScale += Vector3.up * wallHeight;
                 tile.GetComponent<Renderer>().material.color = Settings.wallColor;
                 Rigidbody rb = tile.AddComponent<Rigidbody>();
+                // We don't want colliders to stick on walls
+                tile.GetComponent<BoxCollider>().material.dynamicFriction = 0.8f;
+                tile.GetComponent<BoxCollider>().material.staticFriction = 0.8f; 
                 rb.isKinematic = true;
                 tile.name = "Wall Tile";
                 tile.tag = "Wall";

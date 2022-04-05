@@ -34,7 +34,7 @@ public class Gnome : MonoBehaviour
         }
 
         if(isTouchingGrass){
-            if (this.health != 100.0f)
+            if (this.health <= 100.0f)
                 this.health += healthHealPerSecond * Time.deltaTime;
         }
 

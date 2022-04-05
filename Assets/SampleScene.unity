@@ -300,13 +300,13 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 403483120}
   serializedVersion: 2
-  m_Mass: 0.0000001
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 4
   m_CollisionDetection: 0
 --- !u!114 &403483124
 MonoBehaviour:
@@ -886,13 +886,13 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1630502277}
   serializedVersion: 2
-  m_Mass: 0.0000001
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 116
+  m_Interpolate: 1
+  m_Constraints: 4
   m_CollisionDetection: 0
 --- !u!114 &1630502280
 MonoBehaviour:
@@ -1008,48 +1008,6 @@ MonoBehaviour:
   decelerateOnStop: 1
   maxAcceleration: 10
   timeToTarget: 0.1
---- !u!114 &1630502290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1630502277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 712fa36ac13bbc043b7aabcad738e7dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  facingCosine: 90
-  timeToTarget: 0.1
-  maxAcceleration: 4
---- !u!114 &1630502291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1630502277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b54d0c5e57344f4994540c2b983849a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sepMaxAcceleration: 25
-  maxSepDist: 1
---- !u!114 &1630502292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1630502277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dcff34f8b3e02b44a21610e0e8c523b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  facingCosine: 120
 --- !u!1 &2504826311676745113 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6788822791226841162, guid: 03c108750d6a0aa42b8898b19b84072a, type: 3}

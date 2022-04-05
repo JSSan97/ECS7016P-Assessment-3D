@@ -52,7 +52,7 @@ public class HunterPerception : MonoBehaviour
         // We don't want to seek a tile when there is a wall in the way
         RaycastHit hit;
         if (Physics.Linecast(this.hunter.transform.position, target.transform.position, out hit)){
-            if(hit.transform.tag == "Wall")
+            if(hit.transform.gameObject.tag == "Wall")
                 return true;
         }
         return false;

@@ -59,7 +59,7 @@ public class GnomeThreatField : MonoBehaviour
         // Agent can't see through pursuer through wall
         RaycastHit hit;
         if (Physics.Linecast(this.gnome.transform.position, pursuer.transform.position, out hit)){
-            if(hit.transform.tag == "Wall")
+            if(hit.transform.gameObject.tag == "Wall")
                 return true;
         }
         return false;

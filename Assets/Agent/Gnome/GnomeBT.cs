@@ -22,12 +22,15 @@ public class GnomeBT : MonoBehaviour
     // The gnome's behaviour blackboard     
     private Blackboard blackboard;
 
+    private Rigidbody rigidBody;
+
     private void Awake() {
         steeringBasics = GetComponent<SteeringBasics>();
         wander = GetComponent<Wander2>();
         gnome = GetComponent<Gnome>();
         flee = GetComponent<Flee>();
         evade = GetComponent<Evade>();
+        rigidBody = GetComponent<Rigidbody>();
         gnomePerception = transform.GetChild(0).gameObject.GetComponent<GnomePerception>();
         gnomeThreatField = transform.GetChild(1).gameObject.GetComponent<GnomeThreatField>();
     }
@@ -47,7 +50,7 @@ public class GnomeBT : MonoBehaviour
     private Root CreateBehaviourTree()
     {
         return new Root(
-            new Service(0.5f, UpdatePerception,
+            new Service(0.1f, UpdatePerception,
                 new Selector(
                     new BlackboardCondition("health", Operator.IS_SMALLER_OR_EQUAL, 99.0f, Stops.IMMEDIATE_RESTART,
                         nodeHeal()
@@ -61,6 +64,9 @@ public class GnomeBT : MonoBehaviour
                     new BlackboardCondition("thirst", Operator.IS_SMALLER_OR_EQUAL, 80.0f, Stops.IMMEDIATE_RESTART,
                         nodeStayInWater()
                     ), 
+                    // new BlackboardCondition("wallInFront", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
+                    //     nodeSpin()
+                    // ), 
                     nodeWander()
                 )
             )
@@ -99,6 +105,10 @@ public class GnomeBT : MonoBehaviour
         this.behaviour = null;
     }
 
+    private void actionSpin() {
+        this.behaviour = new BehaviourSpin(this.steeringBasics, this.rigidBody);
+    }
+
 
     /**************************************
     * 
@@ -116,6 +126,23 @@ public class GnomeBT : MonoBehaviour
         blackboard["isHunterNearby"] = gnomeThreatField.getPursuer() != null;
         blackboard["isTouchingGrass"] = gnome.isTouchingWater;
         blackboard["isGrassNearby"] = gnomePerception.getPerceivedGrassTile() != null;
+        WallCollisionPerception();
+    }
+
+    private void WallCollisionPerception()
+    {
+        bool wallInFront = false;
+        // Bit shift the index of the layer (3) to get a bit mask
+        int layerMask = 3;
+
+        RaycastHit hit;
+        Vector3 fwd = transform.TransformDirection(Vector3.forward);
+        if (Physics.Raycast(transform.position, fwd, out hit, 1))
+            if(hit.collider.gameObject.tag == "Wall" && hit.collider != null) {
+                wallInFront = true;
+            }
+
+        blackboard["wallInFront"] = wallInFront;
     }
 
 
@@ -152,6 +179,11 @@ public class GnomeBT : MonoBehaviour
     private Node nodeEvade()
     {
         return new Action(() => actionEvade());
+    }
+
+    private Node nodeSpin()
+    {
+        return new Action(() => actionSpin());
     }
 
     private Node nodeEscapeHunter()
