@@ -17,6 +17,11 @@ public class GnomeBT : MonoBehaviour
     private Evade evade;
     private Flee flee;
 
+    private Cohesion cohesion;
+    private Separation separation;
+    private VelocityMatch velocityMatch;
+    private GnomeFlockingSensor sensor;
+
     // The gnome's behaviour tree
     private Root tree;             
     // The gnome's behaviour blackboard     
@@ -30,6 +35,12 @@ public class GnomeBT : MonoBehaviour
         evade = GetComponent<Evade>();
         gnomePerception = transform.GetChild(0).gameObject.GetComponent<GnomePerception>();
         gnomeThreatField = transform.GetChild(1).gameObject.GetComponent<GnomeThreatField>();
+
+        // For flocking behaviour
+        cohesion = GetComponent<Cohesion>();
+        separation = GetComponent<Separation>();
+        velocityMatch = GetComponent<VelocityMatch>();
+        sensor = transform.Find("Flocking Sensor").GetComponent<GnomeFlockingSensor>();
     }
 
     private void Start()
@@ -58,7 +69,7 @@ public class GnomeBT : MonoBehaviour
                     new BlackboardCondition("thirst", Operator.IS_SMALLER_OR_EQUAL, 80.0f, Stops.IMMEDIATE_RESTART,
                         nodeStayInWater()
                     ), 
-                    nodeWander()
+                    nodeFlock()
                 )
             )
         );
@@ -94,6 +105,10 @@ public class GnomeBT : MonoBehaviour
 
     private void actionStand() {
         this.behaviour = null;
+    }
+
+    private void actionFlock() {
+        this.behaviour = new BehaviourFlocking(this.steeringBasics, this.wander, this.cohesion, this.separation, this.velocityMatch, this.sensor);
     }
 
 
@@ -145,9 +160,14 @@ public class GnomeBT : MonoBehaviour
         return new Action(() => actionFlee());
     }
 
-     private Node nodeEvade()
+    private Node nodeEvade()
     {
         return new Action(() => actionEvade());
+    }
+
+    private Node nodeFlock()
+    {
+        return new Action(() => actionFlock());
     }
 
     private Node nodeEscapeHunter()
@@ -172,12 +192,10 @@ public class GnomeBT : MonoBehaviour
             new BlackboardCondition("isTouchingWater", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
                 nodeStayInWater()
             ), 
-            new Selector(
-                new BlackboardCondition("isWaterNearby", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
-                    nodeSeekWater()
-                ),
-                nodeWander()
-            )
+            new BlackboardCondition("isWaterNearby", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
+                nodeSeekWater()
+            ),
+            nodeWander()
         );
     }
 
