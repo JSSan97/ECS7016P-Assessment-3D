@@ -11,12 +11,12 @@ public class GnomeThreatField : MonoBehaviour
         this.gnome = this.transform.parent.gameObject;
     }
 
-
     private void OnTriggerEnter(Collider other) {   
         switch (other.gameObject.tag) {
             case "Hunter":
                 if(pursuer == null) {
-                    this.pursuer = other.gameObject;
+                    if(!isObstacleBetweenAgentAndPursuer(other.gameObject))
+                        this.pursuer = other.gameObject;
                 } else {
                     this.pursuer = SwitchNearestPursuer(pursuer, other);
                 }
@@ -37,10 +37,21 @@ public class GnomeThreatField : MonoBehaviour
         float distance1 = Vector3.Distance(this.gnome.transform.position, other.gameObject.transform.position);
         float distance2 = Vector3.Distance(this.gnome.transform.position, targetObject.transform.position);
         if(distance1 < distance2) {
-            return other.gameObject;
-        } else {
-            return targetObject;
+            if(!isObstacleBetweenAgentAndPursuer(other.gameObject))
+                return other.gameObject;
         }
+
+        return targetObject;
+    }
+
+    private bool isObstacleBetweenAgentAndPursuer(GameObject pursuer){
+        // Agent can't see through pursuer through wall
+        RaycastHit hit;
+        if (Physics.Linecast(this.gnome.transform.position, pursuer.transform.position, out hit)){
+            if(hit.transform.tag == "Wall")
+                return true;
+        }
+        return false;
     }
 
 

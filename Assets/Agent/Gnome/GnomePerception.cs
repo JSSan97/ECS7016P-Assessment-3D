@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class GnomePerception : MonoBehaviour
 {
-    private GameObject nearestWaterTile;
-    private GameObject nearestGrassTile;
-
+    private GameObject perceivedWaterTile;
+    private GameObject perceivedGrassTile;
     private GameObject gnome;
 
     private void Awake() {
@@ -16,18 +15,20 @@ public class GnomePerception : MonoBehaviour
     private void OnTriggerEnter(Collider other) {   
         switch (other.gameObject.tag) {
             case "Water":
-                if(nearestWaterTile == null) {
-                    nearestWaterTile = other.gameObject;
+                if(perceivedWaterTile == null) {
+                    if(!isObstacleBetweenAgentAndTarget(other.gameObject))
+                        perceivedWaterTile = other.gameObject;
                 } else {
-                    nearestWaterTile = SwitchNearestTarget(nearestWaterTile, other);
+                    perceivedWaterTile = SwitchNearestTarget(perceivedWaterTile, other);
                 }
 
                 break;
             case "Grass":
-                if(nearestGrassTile == null) {
-                    nearestGrassTile = other.gameObject;
+                if(perceivedGrassTile == null) {
+                    if(!isObstacleBetweenAgentAndTarget(other.gameObject))
+                        perceivedGrassTile = other.gameObject;
                 } else {
-                    nearestGrassTile = SwitchNearestTarget(nearestGrassTile, other);
+                    perceivedGrassTile = SwitchNearestTarget(perceivedGrassTile, other);
                 }
                 break;
         }
@@ -36,34 +37,46 @@ public class GnomePerception : MonoBehaviour
     private void OnTriggerExit(Collider other) {   
         switch (other.gameObject.tag) {
             case "Water":
-                if(nearestWaterTile == other.gameObject) {
-                    nearestWaterTile = null;
+                if(perceivedWaterTile == other.gameObject) {
+                    perceivedWaterTile = null;
                 }
                 break;
             case "Grass":
-                if(nearestGrassTile == other.gameObject) {
-                    nearestGrassTile = null;
+                if(perceivedGrassTile == other.gameObject) {
+                    perceivedGrassTile = null;
                 }
                 break;
         }
+    }
+
+    private bool isObstacleBetweenAgentAndTarget(GameObject tile){
+        // We don't want to seek a tile when there is a wall in the way
+        RaycastHit hit;
+        if (Physics.Linecast(this.gnome.transform.position, tile.transform.position, out hit)){
+            if(hit.transform.tag == "Wall")
+                return true;
+        }
+        return false;
     }
 
     private GameObject SwitchNearestTarget(GameObject targetObject, Collider other) {
         float distance1 = Vector3.Distance(this.gnome.transform.position, other.gameObject.transform.position);
         float distance2 = Vector3.Distance(this.gnome.transform.position, targetObject.transform.position);
         if(distance1 < distance2) {
-            return other.gameObject;
-        } else {
-            return targetObject;
+            if (!isObstacleBetweenAgentAndTarget(other.gameObject))
+                return other.gameObject;
         }
+
+        return targetObject;
+
     }
 
-    public GameObject getNearestWaterTile(){
-        return this.nearestWaterTile;
+    public GameObject getPerceivedWaterTile(){
+        return this.perceivedWaterTile;
     }
 
-    public GameObject getNearestGrassTile(){
-        return this.nearestGrassTile;
+    public GameObject getPerceivedGrassTile(){
+        return this.perceivedGrassTile;
     }
 
 }

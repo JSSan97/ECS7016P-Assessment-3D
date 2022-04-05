@@ -67,13 +67,13 @@ public class GnomeBT : MonoBehaviour
     * Wander, Seek Water, Hide in Bush, Flee
     */
     private void actionSeekWater() {
-        if(gnomePerception.getNearestWaterTile() != null)
-            this.behaviour = new CustomSeek(this.steeringBasics, gnomePerception.getNearestWaterTile().transform);
+        if(gnomePerception.getPerceivedWaterTile() != null)
+            this.behaviour = new CustomSeek(this.steeringBasics, gnomePerception.getPerceivedWaterTile().transform);
     }
 
     private void actionSeekGrass() {
-        if(gnomePerception.getNearestGrassTile() != null)
-            this.behaviour = new CustomSeek(this.steeringBasics, gnomePerception.getNearestGrassTile().transform);
+        if(gnomePerception.getPerceivedGrassTile() != null)
+            this.behaviour = new CustomSeek(this.steeringBasics, gnomePerception.getPerceivedGrassTile().transform);
     }
 
     private void actionWander() {
@@ -96,37 +96,13 @@ public class GnomeBT : MonoBehaviour
     */
     private void UpdatePerception()
     {
-        bool isWaterNearby = false;
-        
-        if(gnomePerception.getNearestWaterTile() != null){
-            isWaterNearby = true;
-            RaycastHit hit;
-            // We don't want to seek water when there are walls in the way
-            if (Physics.Linecast(this.gnome.transform.position, gnomePerception.getNearestWaterTile().transform.position, out hit)){
-                if(hit.transform.tag == "Wall")
-                    isWaterNearby = false;
-            }
-        }
-
-        bool isGrassNearby = false;
-        if(gnomePerception.getNearestGrassTile() != null){
-            isGrassNearby = true;
-            RaycastHit hit;
-            // We don't want to seek water when there are walls in the way
-            if (Physics.Linecast(this.gnome.transform.position, gnomePerception.getNearestGrassTile().transform.position, out hit)){
-                if(hit.transform.tag == "Wall")
-                    isGrassNearby = false;
-            }
-        }
-
-
         blackboard["thirst"] = gnome.thirst;
         blackboard["isTouchingWater"] = gnome.isTouchingWater;
-        blackboard["isWaterNearby"] = isWaterNearby;
+        blackboard["isWaterNearby"] = gnomePerception.getPerceivedWaterTile() != null;
 
         blackboard["isHunterNearby"] = gnomeThreatField.getPursuer() != null;
         blackboard["isTouchingGrass"] = gnome.isTouchingWater;
-        blackboard["isGrassNearby"] = isGrassNearby;
+        blackboard["isGrassNearby"] = gnomePerception.getPerceivedGrassTile() != null;
 
     }
 

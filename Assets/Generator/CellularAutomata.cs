@@ -219,7 +219,7 @@ public class CellularAutomata
         // Now using the maps, start drawing out the tiles.
         for (int x=0; x < width; x++) {
             for (int y=0; y < height; y++) {
-                Vector3 pos = new Vector3(x + .5f,0, y + .5f);
+                Vector3 pos = new Vector3(x + .5f, 0, y + .5f);
                 Vector3 relativePosition = node.roomBottomLeft + pos;
 
                 if(wallMap[x, y] == 1) {
