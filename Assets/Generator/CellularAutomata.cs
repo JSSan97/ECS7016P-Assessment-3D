@@ -38,7 +38,7 @@ public class CellularAutomata
         AssignFillPercent();
         // Start with noise for the wall tiles
         CreateRoomNoise();
-        // Open corridors so they are not closed in the cellular automata 
+        // Open corridors so they are not closed by walls or water
         OpenCorridors();
         // Use the noise and cellular automata to smooth out the walls.
         FillWallNoise();
@@ -46,6 +46,8 @@ public class CellularAutomata
         CreateGrassWaterNoise();
         // Use the noise and cellular automata to set the grass and water tiles
         FillGrassWaterNoise();
+        // Open corridors so they are not closed
+        OpenCorridors();
         // Draw tiles wrapper method
         DrawTiles(wallHeight);
     }
@@ -121,6 +123,7 @@ public class CellularAutomata
                 for(int i = (int) vertice1.x; i < (int) vertice2.x; i++) {
                     try{
                         wallMap[i, Mathf.RoundToInt(vertice1.z)] = 0;
+                        waterMap[i, Mathf.RoundToInt(vertice1.z)] = 0;
                     } catch (System.IndexOutOfRangeException e) {
                         Debug.Log("IndexOutOfRange Exception for room " + node.name);
                         Debug.Log("Corridor[0] = " + corridor[0]);
@@ -130,8 +133,10 @@ public class CellularAutomata
                     }
                     if(vertice1.z == 0) {
                         wallMap[i, Mathf.RoundToInt(vertice1.z) + 1] = 0;
+                        waterMap[i, Mathf.RoundToInt(vertice1.z) + 1] = 0;
                     } else {
                         wallMap[i, Mathf.RoundToInt(vertice1.z) - 1] = 0;
+                        waterMap[i, Mathf.RoundToInt(vertice1.z) - 1] = 0;
                     }
                 }
             }
@@ -140,6 +145,7 @@ public class CellularAutomata
                 for(int i= (int) vertice1.z; i < (int) vertice2.z; i++) {
                     try {
                         wallMap[Mathf.RoundToInt(vertice1.x), i] = 0;
+                        waterMap[Mathf.RoundToInt(vertice1.x), i] = 0;
                     } catch (System.IndexOutOfRangeException e) {
                         Debug.Log("IndexOutOfRange Exception for room " + node.name);
                         Debug.Log("Corridor[0] = " + corridor[0]);
@@ -149,8 +155,10 @@ public class CellularAutomata
                     }
                     if(vertice1.x == 0) {
                         wallMap[Mathf.RoundToInt(vertice1.x) + 1, i] = 0;
+                        waterMap[Mathf.RoundToInt(vertice1.x) + 1, i] = 0;
                     } else {
                         wallMap[Mathf.RoundToInt(vertice1.x) - 1, i] = 0;
+                        waterMap[Mathf.RoundToInt(vertice1.x) - 1, i] = 0;
                     }
                 }
             }

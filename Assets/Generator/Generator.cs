@@ -304,7 +304,7 @@ public class Generator : MonoBehaviour
             while(gnomeCount < this.gnomesPerRoom){
                 float x = Random.Range(node.roomBottomLeft.x, node.roomBottomRight.x);
                 float z = Random.Range(node.roomBottomLeft.z, node.roomTopLeft.z);
-                Vector3 position = new Vector3(x, 0.7f, z);
+                Vector3 position = new Vector3(x, 0.8f, z);
 
                 GameObject gnome = Instantiate(prefabGnome, position, Quaternion.identity);
                 gnome.name = "Gnome " + totalGnomeCount;
@@ -315,7 +315,7 @@ public class Generator : MonoBehaviour
             while(hunterCount < this.hunterPerRoom) {
                 float x = Random.Range(node.roomBottomLeft.x, node.roomBottomRight.x);
                 float z = Random.Range(node.roomBottomLeft.z, node.roomTopLeft.z);
-                Vector3 position = new Vector3(x, 0.7f, z);
+                Vector3 position = new Vector3(x, 0.8f, z);
 
                 GameObject hunter = Instantiate(prefabHunter, position, Quaternion.identity);
                 hunter.name = "Hunter " + totalHunterCount;

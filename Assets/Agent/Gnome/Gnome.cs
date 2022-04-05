@@ -10,9 +10,9 @@ public class Gnome : MonoBehaviour
     // Thirst decreases per second regardless of tile
     public float thirstDecayPerSecond = 0.5f;
     // Thirst increases on water tile
-    public float thirstHealPerSecond = 2.0f;
+    public float thirstHealPerSecond = 4.0f;
     // Health heals on grass tile
-    public float healthHealPerSecond = 2.0f;
+    public float healthHealPerSecond = 4.0f;
     // Health decreases when colliding with hunter per second
     public float hunterDamage = 10.0f;
 

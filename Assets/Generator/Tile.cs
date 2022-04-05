@@ -33,6 +33,7 @@ public class Tile
         switch (this.type) {
             case "Ground":
                 tile.GetComponent<Renderer>().material.color = Settings.groundColor;
+                tile.GetComponent<BoxCollider>().size = new Vector3(1, 0.9f, 1);
                 tile.name = "Ground Tile";
                 tile.tag = "Ground";
                 break;
