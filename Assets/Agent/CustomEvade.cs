@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityMovementAI;
 
-public class BehaviourPursue : CustomBehaviour
+public class BehaviourEvade : CustomBehaviour
 {
     public MovementAIRigidbody target;
     SteeringBasics steeringBasics;
-    Pursue pursue;
+    Evade evade;
 
-    public BehaviourPursue(SteeringBasics steeringBasics, Pursue pursue, MovementAIRigidbody target){
+    public BehaviourEvade(SteeringBasics steeringBasics, Evade evade, MovementAIRigidbody target){
         this.steeringBasics = steeringBasics;
-        this.pursue = pursue;
+        this.evade = evade;
         this.target = target;
     }
 
     public override void Perform()
     {
-        Vector3 accel = pursue.GetSteering(target);
+        Vector3 accel = evade.GetSteering(target);
         steeringBasics.Steer(accel);
         steeringBasics.LookWhereYoureGoing();
     }
+
 }

@@ -119,7 +119,15 @@ public class CellularAutomata
             // Unblock corridors in the top and bottom sides of the room
             if(vertice1.z == vertice2.z) {
                 for(int i = (int) vertice1.x; i < (int) vertice2.x; i++) {
-                    wallMap[i, Mathf.RoundToInt(vertice1.z)] = 0;
+                    try{
+                        wallMap[i, Mathf.RoundToInt(vertice1.z)] = 0;
+                    } catch (System.IndexOutOfRangeException e) {
+                        Debug.Log("IndexOutOfRange Exception for room " + node.name);
+                        Debug.Log("Corridor[0] = " + corridor[0]);
+                        Debug.Log("Corridor[1] = " + corridor[1]);
+                        Debug.Log("vertice1.z = " + vertice1.z + ". i = " + i);
+                        continue;
+                    }
                     if(vertice1.z == 0) {
                         wallMap[i, Mathf.RoundToInt(vertice1.z) + 1] = 0;
                     } else {

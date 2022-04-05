@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityMovementAI;
 
-public class CustomSeek : CustomBehaviour
+public class BehaviourSeek : CustomBehaviour
 {
     public Transform target;
 
     SteeringBasics steeringBasics;
 
-    public CustomSeek(SteeringBasics steeringBasics, Transform target){
+    public BehaviourSeek(SteeringBasics steeringBasics, Transform target){
         this.steeringBasics = steeringBasics;
         this.target = target;
     }

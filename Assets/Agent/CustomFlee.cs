@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityMovementAI;
 
-public class CustomFlee : CustomBehaviour
+public class BehaviourFlee : CustomBehaviour
 {
     public Transform target;
     SteeringBasics steeringBasics;
     Flee flee;
 
-    public CustomFlee(SteeringBasics steeringBasics, Flee flee, Transform target){
+    public BehaviourFlee(SteeringBasics steeringBasics, Flee flee, Transform target){
         this.steeringBasics = steeringBasics;
         this.flee = flee;
         this.target = target;

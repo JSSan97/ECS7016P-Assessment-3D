@@ -6,6 +6,7 @@ public class GnomePerception : MonoBehaviour
 {
     private GameObject perceivedWaterTile;
     private GameObject perceivedGrassTile;
+    private GameObject closestWallTile;
     private GameObject gnome;
 
     private void Awake() {
@@ -31,6 +32,31 @@ public class GnomePerception : MonoBehaviour
                     perceivedGrassTile = SwitchNearestTarget(perceivedGrassTile, other);
                 }
                 break;
+            case "Wall":
+                if(closestWallTile == null) {
+                    if(!isObstacleBetweenAgentAndTarget(other.gameObject))
+                        closestWallTile = other.gameObject;
+                } else {
+                    closestWallTile = SwitchNearestTarget(closestWallTile, other);
+                }
+                break;
+        }
+    }
+
+    private void OnTriggerStay(Collider other) {
+        switch (other.gameObject.tag) {
+            case "Water":
+                if(perceivedWaterTile == other.gameObject){
+                    if(isObstacleBetweenAgentAndTarget(other.gameObject))
+                        perceivedWaterTile = null;
+                }
+                break;
+            case "Grass":
+                if(perceivedGrassTile == other.gameObject){
+                    if(isObstacleBetweenAgentAndTarget(other.gameObject))
+                        perceivedGrassTile = null;
+                }
+                break;
         }
     }
 
@@ -44,6 +70,11 @@ public class GnomePerception : MonoBehaviour
             case "Grass":
                 if(perceivedGrassTile == other.gameObject) {
                     perceivedGrassTile = null;
+                }
+                break;
+            case "Wall":
+                if(closestWallTile == other.gameObject) {
+                    closestWallTile = null;
                 }
                 break;
         }
@@ -66,9 +97,9 @@ public class GnomePerception : MonoBehaviour
             if (!isObstacleBetweenAgentAndTarget(other.gameObject))
                 return other.gameObject;
         }
-
-        return targetObject;
-
+        if(!isObstacleBetweenAgentAndTarget(targetObject))
+            return targetObject;
+        return null;
     }
 
     public GameObject getPerceivedWaterTile(){
@@ -79,4 +110,7 @@ public class GnomePerception : MonoBehaviour
         return this.perceivedGrassTile;
     }
 
+    public GameObject getClosestWallTile(){
+        return this.closestWallTile;
+    }
 }

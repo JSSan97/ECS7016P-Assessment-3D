@@ -24,6 +24,17 @@ public class GnomeThreatField : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other) {
+        switch (other.gameObject.tag) {
+            case "Hunter":
+                if(pursuer == other.gameObject) {
+                    if(!isObstacleBetweenAgentAndPursuer(other.gameObject))
+                        this.pursuer = other.gameObject;
+                }
+                break;
+        }
+    }
+
     private void OnTriggerExit(Collider other) {   
         switch (other.gameObject.tag) {
             case "Hunter":

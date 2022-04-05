@@ -59,12 +59,12 @@ public class HunterBT : MonoBehaviour
     * Wander, Chase/Pursue
     */
     private void actionWander() {
-        this.behaviour = new CustomWander(this.steeringBasics, this.wander);
+        this.behaviour = new BehaviourWander(this.steeringBasics, this.wander);
     }
 
     private void actionPursue() {
         MovementAIRigidbody target = hunterPerception.getTarget().GetComponent<MovementAIRigidbody>();
-        this.behaviour = new CustomPursue(this.steeringBasics, this.pursue, target);
+        this.behaviour = new BehaviourPursue(this.steeringBasics, this.pursue, target);
     }
 
     /**************************************

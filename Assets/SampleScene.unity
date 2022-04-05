@@ -166,10 +166,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 2.8015397
-  m_Height: 5.6030793
+  m_Radius: 4.576755
+  m_Height: 9.15351
   m_Direction: 1
-  m_Center: {x: 1.9312842, y: -0.00000023841858, z: 0.047521114}
+  m_Center: {x: 3.09244, y: -0.0000009536743, z: 0.047521114}
 --- !u!114 &52465926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,8 +285,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxVelocity: 3.5
-  maxAcceleration: 14
-  turnSpeed: 25
+  maxAcceleration: 10
+  turnSpeed: 20
   targetRadius: 0.005
   slowRadius: 1
   timeToTarget: 0.1
@@ -300,7 +300,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 403483120}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
@@ -334,7 +334,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 403483120}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 045484748a4caea4da3300c5fcb4ebf5, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -746,10 +746,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 3.8103778
-  m_Height: 7.6207557
+  m_Radius: 4.576755
+  m_Height: 9.15351
   m_Direction: 1
-  m_Center: {x: 3.8588173, y: -0.00000023841858, z: 0.047521114}
+  m_Center: {x: 3.0924401, y: -0.00000047683716, z: 0.047521114}
 --- !u!54 &1322586861
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -821,7 +821,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 3.4785
+  m_Radius: 4
   m_Height: 6.957
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -961,6 +961,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c16a726ee2ec1640b4a35c6a4a2ff96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1630502284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630502277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52e7f349139dea54da032182166c26d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxPrediction: 2
 --- !u!135 &1630502285
 SphereCollider:
   m_ObjectHideFlags: 0
