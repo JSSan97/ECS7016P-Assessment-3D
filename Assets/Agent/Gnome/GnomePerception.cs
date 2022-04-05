@@ -6,7 +6,6 @@ public class GnomePerception : MonoBehaviour
 {
     private GameObject perceivedWaterTile;
     private GameObject perceivedGrassTile;
-    private GameObject closestWallTile;
     private GameObject gnome;
 
     private void Awake() {
@@ -30,14 +29,6 @@ public class GnomePerception : MonoBehaviour
                         perceivedGrassTile = other.gameObject;
                 } else {
                     perceivedGrassTile = SwitchNearestTarget(perceivedGrassTile, other);
-                }
-                break;
-            case "Wall":
-                if(closestWallTile == null) {
-                    if(!isObstacleBetweenAgentAndTarget(other.gameObject))
-                        closestWallTile = other.gameObject;
-                } else {
-                    closestWallTile = SwitchNearestTarget(closestWallTile, other);
                 }
                 break;
         }
@@ -70,11 +61,6 @@ public class GnomePerception : MonoBehaviour
             case "Grass":
                 if(perceivedGrassTile == other.gameObject) {
                     perceivedGrassTile = null;
-                }
-                break;
-            case "Wall":
-                if(closestWallTile == other.gameObject) {
-                    closestWallTile = null;
                 }
                 break;
         }
@@ -110,7 +96,4 @@ public class GnomePerception : MonoBehaviour
         return this.perceivedGrassTile;
     }
 
-    public GameObject getClosestWallTile(){
-        return this.closestWallTile;
-    }
 }

@@ -47,6 +47,8 @@ public class Tile
             case "Wall":
                 tile.transform.localScale += Vector3.up * wallHeight;
                 tile.GetComponent<Renderer>().material.color = Settings.wallColor;
+                Rigidbody rb = tile.AddComponent<Rigidbody>();
+                rb.isKinematic = true;
                 tile.name = "Wall Tile";
                 tile.tag = "Wall";
                 break;
