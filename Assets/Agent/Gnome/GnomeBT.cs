@@ -59,12 +59,11 @@ public class GnomeBT : MonoBehaviour
         );
     }
 
-
     /**************************************
     * 
     * GNOME ACTIONS
     * 
-    * Wander, Seek Water, Hide in Bush, Flee
+    * Wander, Seek Water, Seek Grass, Wander, Flee
     */
     private void actionSeekWater() {
         if(gnomePerception.getPerceivedWaterTile() != null)
@@ -143,7 +142,7 @@ public class GnomeBT : MonoBehaviour
             new BlackboardCondition("isGrassNearby", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
                 nodeSeekGrass()
             ),
-            nodeSeekGrass()
+            nodeFlee()
         );
     }
 
