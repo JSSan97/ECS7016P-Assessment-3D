@@ -5,9 +5,9 @@ using UnityMovementAI;
 
 public class BehaviourFlocking : CustomBehaviour
 {
-    public float cohesionWeight = 1.5f;
-    public float separationWeight = 1f;
-    public float velocityMatchWeight = 1f;
+    public float cohesionWeight = 4f;
+    public float separationWeight = 4f;
+    public float velocityMatchWeight = 4f;
 
     SteeringBasics steeringBasics;
     Wander2 wander;

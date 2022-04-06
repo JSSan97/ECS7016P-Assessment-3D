@@ -6,7 +6,8 @@ using UnityMovementAI;
 // Modified so that only gnomes are flocking together rather than all MovementAIRigidBodies
 public class GnomeFlockingSensor : MonoBehaviour
 {
-    HashSet<MovementAIRigidbody> _targets = new HashSet<MovementAIRigidbody>();
+    public HashSet<MovementAIRigidbody> _targets = new HashSet<MovementAIRigidbody>();
+    private bool isPlayerNearby = false;
 
     public HashSet<MovementAIRigidbody> targets
     {
@@ -43,25 +44,23 @@ public class GnomeFlockingSensor : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Gnome")
+        if(other.gameObject.tag == "Player")
+            isPlayerNearby = true;
+
+        if(other.gameObject.tag == "Gnome" || other.gameObject.tag == "Player")
             TryToAdd(other);
     }
 
     void OnTriggerExit(Collider other)
     {
-        if(other.gameObject.tag == "Gnome")
+        if(other.gameObject.tag == "Player")
+            isPlayerNearby = false;
+
+        if(other.gameObject.tag == "Gnome" || other.gameObject.tag == "Player")
             TryToRemove(other);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if(other.gameObject.tag == "Gnome")
-            TryToAdd(other);
-    }
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if(other.gameObject.tag == "Gnome")
-            TryToRemove(other);
+    public bool getIsPlayerNearby(){
+        return this.isPlayerNearby;
     }
 }

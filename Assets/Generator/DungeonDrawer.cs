@@ -123,7 +123,7 @@ public class DungeonDrawer
         node2.corridorExits.Add(nodeExit2);
 
         string objectName = "Corridor " + node.name + " to " + node2.name; 
-        GameObject corridor = this.CreateQuad(this.corridors, objectName, 0.5f, corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight, Settings.groundColor);
+        GameObject corridor = this.CreateQuad(this.corridors, objectName, 0.4f, corridorBottomLeft, corridorBottomRight, corridorTopLeft, corridorTopRight, Settings.groundColor);
         
         // More settings for the walls
         wall1.transform.localScale += Vector3.up * this.wallHeight;

@@ -23,6 +23,10 @@ public class GnomeBT : MonoBehaviour
     private Blackboard blackboard;
 
     private Rigidbody rigidBody;
+    private Cohesion cohesion;
+    private Separation separation;
+    private VelocityMatch velocityMatch;
+    private GnomeFlockingSensor gnomeFlockingSensor;
 
     private void Awake() {
         steeringBasics = GetComponent<SteeringBasics>();
@@ -31,8 +35,12 @@ public class GnomeBT : MonoBehaviour
         flee = GetComponent<Flee>();
         evade = GetComponent<Evade>();
         rigidBody = GetComponent<Rigidbody>();
+        separation = GetComponent<Separation>();
+        velocityMatch = GetComponent<VelocityMatch>();
+        cohesion = GetComponent<Cohesion>();
         gnomePerception = transform.GetChild(0).gameObject.GetComponent<GnomePerception>();
         gnomeThreatField = transform.GetChild(1).gameObject.GetComponent<GnomeThreatField>();
+        gnomeFlockingSensor = transform.GetChild(2).gameObject.GetComponent<GnomeFlockingSensor>();
     }
 
     private void Start()
@@ -52,6 +60,9 @@ public class GnomeBT : MonoBehaviour
         return new Root(
             new Service(0.1f, UpdatePerception,
                 new Selector(
+                    new BlackboardCondition("isPlayerNearby", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
+                        nodeFlock()
+                    ), 
                     new BlackboardCondition("health", Operator.IS_SMALLER_OR_EQUAL, 99.0f, Stops.IMMEDIATE_RESTART,
                         nodeHeal()
                     ), 
@@ -114,6 +125,10 @@ public class GnomeBT : MonoBehaviour
         this.behaviour = new BehaviourSpin(this.steeringBasics, this.rigidBody);
     }
 
+    private void actionFlock() {
+        this.behaviour = new BehaviourFlocking(this.steeringBasics, this.wander, this.cohesion, this.separation, this.velocityMatch, this.gnomeFlockingSensor);
+    }
+
 
     /**************************************
     * 
@@ -131,6 +146,7 @@ public class GnomeBT : MonoBehaviour
         blackboard["isHunterNearby"] = gnomeThreatField.getPursuer() != null;
         blackboard["isTouchingGrass"] = gnome.isTouchingWater;
         blackboard["isGrassNearby"] = gnomePerception.getPerceivedGrassTile() != null;
+        blackboard["isPlayerNearby"] = gnomeFlockingSensor.getIsPlayerNearby();
         WallCollisionPerception();
     }
 
@@ -189,6 +205,11 @@ public class GnomeBT : MonoBehaviour
     private Node nodeSpin()
     {
         return new Action(() => actionSpin());
+    }
+
+    private Node nodeFlock()
+    {
+        return new Action(() => actionFlock());
     }
 
     private Node nodeEscapeHunter()
