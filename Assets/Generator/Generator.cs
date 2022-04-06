@@ -13,6 +13,8 @@ public class Generator : MonoBehaviour
     public GameObject prefabGnome;
     // Prefab Hunter to be instantiated for room
     public GameObject prefabHunter;
+    // Prefab Player to be instantiated
+    public GameObject prefabPlayer;
 
     [Header("Dungeon Settings")]
     // Set size of the whole dungeon
@@ -284,6 +286,8 @@ public class Generator : MonoBehaviour
     private void PopulateRooms(){
         int totalGnomeCount = 1;
         int totalHunterCount = 1;
+        bool addedPlayer = false;
+
         foreach (BSPNode node in BSPTree.GetLeafNodes()) {
             // Populate room for tiles
             node.UpdateRoomSpace();
@@ -305,7 +309,33 @@ public class Generator : MonoBehaviour
                 if(foundPosition)
                     totalHunterCount += 1;
             }
-        } 
+
+            if(addedPlayer == false){
+                AddPlayer(node, wallMap, "Player", prefabPlayer);
+                addedPlayer = true;
+            }
+        }
+    }
+
+    private void AddPlayer(BSPNode node, int[,] wallMap, string name, GameObject prefabAgent){
+        bool foundPosition = false;
+
+        int x = 0;
+        int z = 0;
+
+        while(!foundPosition) {
+            x = Random.Range(1, wallMap.GetLength(0) - 1);
+            z = Random.Range(1, wallMap.GetLength(1) - 1);
+            if(wallMap[x, z] == 0) {
+                foundPosition = true;
+            } 
+        }
+            
+        Vector3 position = node.roomBottomLeft + new Vector3(x + 0.5F, 0.8f, z + 0.5f);
+        GameObject player = Instantiate(prefabAgent, position, Quaternion.identity);
+        player.name = name;
+
+        player.GetComponent<MoveCamera2>().camera = mainCamera;
     }
 
     private bool AddAgent(BSPNode node, int[,] wallMap, string name, GameObject prefabAgent){
