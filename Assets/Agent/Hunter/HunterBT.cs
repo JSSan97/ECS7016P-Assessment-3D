@@ -17,13 +17,17 @@ public class HunterBT : MonoBehaviour
     private Wander2 wander;
     private Pursue pursue;
     private HunterPerception hunterPerception;
+    private HunterThreatField hunterThreatField;
+    private Flee flee;
 
     private void Awake()
     {
         steeringBasics = GetComponent<SteeringBasics>();
         wander = GetComponent<Wander2>();
         pursue = GetComponent<Pursue>();
+        flee = GetComponent<Flee>();
         hunterPerception = transform.GetChild(0).gameObject.GetComponent<HunterPerception>();
+        hunterThreatField = transform.GetChild(1).gameObject.GetComponent<HunterThreatField>();
     }
 
     private void Start()
@@ -43,6 +47,9 @@ public class HunterBT : MonoBehaviour
         return new Root(
             new Service(0.5f, UpdatePerception,
                 new Selector(
+                    new BlackboardCondition("isPursued", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
+                        nodeFlee()
+                    ),                
                     new BlackboardCondition("hasTarget", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
                         nodeChaseTarget()
                     ), 
@@ -56,7 +63,7 @@ public class HunterBT : MonoBehaviour
     * 
     * Hunter
     * 
-    * Wander, Chase/Pursue
+    * Wander, Chase/Pursue, Flee from player
     */
     private void actionWander() {
         this.behaviour = new BehaviourWander(this.steeringBasics, this.wander);
@@ -67,6 +74,10 @@ public class HunterBT : MonoBehaviour
         this.behaviour = new BehaviourPursue(this.steeringBasics, this.pursue, target);
     }
 
+    private void actionFlee() {
+        this.behaviour = new BehaviourFlee(this.steeringBasics, this.flee, hunterThreatField.getPursuer().transform);
+    }
+
     /**************************************
     * 
     * Hunter PERCEPTION
@@ -75,6 +86,7 @@ public class HunterBT : MonoBehaviour
     private void UpdatePerception()
     {
         blackboard["hasTarget"] = hunterPerception.getTarget() != null;
+        blackboard["isPursued"] = hunterThreatField.getPursuer() != null;
     }
 
     /**************************************
@@ -92,6 +104,10 @@ public class HunterBT : MonoBehaviour
         return new Action(() => actionPursue());
     }
 
+    private Node nodeFlee()
+    {
+        return new Action(() => actionFlee());
+    }
 
 
 }

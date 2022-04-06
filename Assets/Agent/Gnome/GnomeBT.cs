@@ -64,9 +64,9 @@ public class GnomeBT : MonoBehaviour
                     new BlackboardCondition("thirst", Operator.IS_SMALLER_OR_EQUAL, 80.0f, Stops.IMMEDIATE_RESTART,
                         nodeStayInWater()
                     ), 
-                    // new BlackboardCondition("wallInFront", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
-                    //     nodeSpin()
-                    // ), 
+                    new BlackboardCondition("isWallInFront", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
+                        nodeSpin()
+                    ),
                     nodeWander()
                 )
             )
@@ -87,6 +87,11 @@ public class GnomeBT : MonoBehaviour
     private void actionSeekGrass() {
         if(gnomePerception.getPerceivedGrassTile() != null)
             this.behaviour = new BehaviourSeek(this.steeringBasics, gnomePerception.getPerceivedGrassTile().transform);
+    }
+
+    private void actionPushHunter() {
+        if(gnomeThreatField.getPursuer() != null)
+            this.behaviour = new BehaviourSeek(this.steeringBasics, gnomeThreatField.getPursuer().transform);
     }
 
     private void actionWander() {
@@ -136,13 +141,13 @@ public class GnomeBT : MonoBehaviour
         //int layerMask = 3;
 
         RaycastHit hit;
-        Vector3 fwd = transform.TransformDirection(Vector3.forward);
+        Vector3 fwd = transform.TransformDirection(transform.right);
         if (Physics.Raycast(transform.position, fwd, out hit, 1))
             if(hit.collider.gameObject.tag == "Wall" && hit.collider != null) {
                 wallInFront = true;
             }
 
-        blackboard["wallInFront"] = wallInFront;
+        blackboard["isWallInFront"] = wallInFront;
     }
 
 
@@ -195,9 +200,16 @@ public class GnomeBT : MonoBehaviour
             new BlackboardCondition("isGrassNearby", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
                 nodeSeekGrass()
             ),
+            new BlackboardCondition("isWallInFront", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
+                nodeSpin()
+            ),
             new RandomSelector(
-                nodeFlee(),
-                nodeEvade()
+                new Sequence(
+                    nodeFlee()
+                ),
+                new Sequence(
+                    nodeEvade()
+                )
             )
         );
     }
@@ -233,8 +245,8 @@ public class GnomeBT : MonoBehaviour
 
     private Node nodeStayInWater(){
         return new BlackboardCondition("isTouchingWater", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
-            new BlackboardCondition("isHunterNearby", Operator.IS_EQUAL, false, Stops.IMMEDIATE_RESTART,
-                nodeStand()
+            new Selector(
+                nodeWander()
             )
         );
     }

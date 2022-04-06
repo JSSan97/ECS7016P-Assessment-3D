@@ -49,8 +49,10 @@ public class Tile
                 tile.GetComponent<Renderer>().material.color = Settings.wallColor;
                 Rigidbody rb = tile.AddComponent<Rigidbody>();
                 // We don't want colliders to stick on walls
-                tile.GetComponent<BoxCollider>().material.dynamicFriction = 0.8f;
-                tile.GetComponent<BoxCollider>().material.staticFriction = 0.8f; 
+                tile.GetComponent<BoxCollider>().material.dynamicFriction = 0.0f;
+                tile.GetComponent<BoxCollider>().size = new Vector3(1.1f, 1.1f, 1.1f);
+                tile.GetComponent<BoxCollider>().material.staticFriction = 0.0f; 
+                tile.GetComponent<BoxCollider>().material.bounciness = 0.3f; 
                 rb.isKinematic = true;
                 tile.name = "Wall Tile";
                 tile.tag = "Wall";

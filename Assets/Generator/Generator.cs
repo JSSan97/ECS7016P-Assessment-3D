@@ -35,7 +35,7 @@ public class Generator : MonoBehaviour
 
     // How many gnomes and wolves per room
     public int gnomesPerRoom;
-    public int hunterPerRoom;
+    public int huntersPerRoom;
 
     // Tree data structure to record nodes and branches
     private BinaryTree BSPTree = new BinaryTree();
@@ -75,7 +75,7 @@ public class Generator : MonoBehaviour
         baseDungeon.transform.position = new Vector3(baseDungeonWidth/2, 0, baseDungeonHeight/2);
 
         // Bring Camera to Centre of Dungeon
-        mainCamera.transform.position = new Vector3(baseDungeonWidth/2, 40, baseDungeonHeight/2);
+        // mainCamera.transform.position = new Vector3(baseDungeonWidth/2, 40, baseDungeonHeight/2);
 
         // Add Root Node to Tree including the positions of each corner
         Vector3 bottomLeft, bottomRight, topLeft, topRight;
@@ -299,7 +299,7 @@ public class Generator : MonoBehaviour
                 if(foundPosition)
                     totalGnomeCount += 1;
             }
-            while(gnomeCount < this.gnomesPerRoom){
+            while(hunterCount < this.huntersPerRoom){
                 bool foundPosition = AddAgent(node, wallMap, "Hunter " + totalHunterCount, prefabHunter);
                 hunterCount += 1;
                 if(foundPosition)
