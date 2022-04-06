@@ -251,4 +251,8 @@ public class CellularAutomata
             }
         }
     }
+
+    public int[,] getWallMap(){
+        return this.wallMap;
+    }
 }

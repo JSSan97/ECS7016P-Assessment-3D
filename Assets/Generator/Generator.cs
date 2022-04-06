@@ -62,10 +62,8 @@ public class Generator : MonoBehaviour
         BuildRooms();
         // Build Corridors
         BuildCorridors();
-        // Populate Rooms
+        // Populate Rooms with Tiles and Add Agents
         PopulateRooms();
-        // Add Agents
-        AddAgents();
     }
 
     void SetupBaseDungeon()
@@ -284,44 +282,52 @@ public class Generator : MonoBehaviour
     }
 
     private void PopulateRooms(){
-        foreach (BSPNode node in BSPTree.GetLeafNodes()) {
-            node.UpdateRoomSpace();
-            dungeonDrawer.PopulateRoom(node);
-        }        
-    }
-
-    private void AddAgents(){
         int totalGnomeCount = 1;
         int totalHunterCount = 1;
-        // Add hunters and gnomes for each room
-        float gnomeRadius = prefabGnome.GetComponent<SphereCollider>().radius;
-        float hunterRadius = prefabHunter.GetComponent<SphereCollider>().radius;
-
         foreach (BSPNode node in BSPTree.GetLeafNodes()) {
+            // Populate room for tiles
+            node.UpdateRoomSpace();
+            // Use wallmap so we don't spawn agents in walls
+            int[,] wallMap = dungeonDrawer.PopulateRoom(node);
+
             int gnomeCount = 0;
             int hunterCount = 0;
 
             while(gnomeCount < this.gnomesPerRoom){
-                float x = Random.Range(node.roomBottomLeft.x, node.roomBottomRight.x);
-                float z = Random.Range(node.roomBottomLeft.z, node.roomTopLeft.z);
-                Vector3 position = new Vector3(x, 0.8f, z);
-
-                GameObject gnome = Instantiate(prefabGnome, position, Quaternion.identity);
-                gnome.name = "Gnome " + totalGnomeCount;
+                bool foundPosition = AddAgent(node, wallMap, "Gnome " + totalGnomeCount, prefabGnome);
                 gnomeCount += 1;
-                totalGnomeCount +=1;
+                if(foundPosition)
+                    totalGnomeCount += 1;
             }
-
-            while(hunterCount < this.hunterPerRoom) {
-                float x = Random.Range(node.roomBottomLeft.x, node.roomBottomRight.x);
-                float z = Random.Range(node.roomBottomLeft.z, node.roomTopLeft.z);
-                Vector3 position = new Vector3(x, 0.8f, z);
-
-                GameObject hunter = Instantiate(prefabHunter, position, Quaternion.identity);
-                hunter.name = "Hunter " + totalHunterCount;
+            while(gnomeCount < this.gnomesPerRoom){
+                bool foundPosition = AddAgent(node, wallMap, "Hunter " + totalHunterCount, prefabHunter);
                 hunterCount += 1;
-                totalHunterCount += 1;
+                if(foundPosition)
+                    totalHunterCount += 1;
             }
+        } 
+    }
+
+    private bool AddAgent(BSPNode node, int[,] wallMap, string name, GameObject prefabAgent){
+        bool foundPosition = false;
+        int attempts = 3;
+
+        int x = 0;
+        int z = 0;
+
+        while(!foundPosition && attempts != 0) {
+            x = Random.Range(1, wallMap.GetLength(0) - 1);
+            z = Random.Range(1, wallMap.GetLength(1) - 1);
+            attempts -= 1;
+            if(wallMap[x, z] == 0) {
+                foundPosition = true;
+            } 
         }
+            
+        Vector3 position = node.roomBottomLeft + new Vector3(x + 0.5F, 0.8f, z + 0.5f);
+        GameObject agent = Instantiate(prefabAgent, position, Quaternion.identity);
+        agent.name = name;
+
+        return foundPosition;
     }
 }

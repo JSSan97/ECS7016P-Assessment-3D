@@ -27,10 +27,12 @@ public class DungeonDrawer
         this.wallHeight = wallHeight;
     }
 
-    public void PopulateRoom(BSPNode node) {
+    public int[,] PopulateRoom(BSPNode node) {
         // Populate room with tiles.
         CellularAutomata cellularAutomata = new CellularAutomata(node);
         cellularAutomata.PopulateRoom(this.wallHeight);
+
+        return cellularAutomata.getWallMap();
     }
 
     public void DrawRoom(BSPNode node) {

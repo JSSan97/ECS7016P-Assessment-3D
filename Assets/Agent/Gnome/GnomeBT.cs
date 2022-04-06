@@ -133,7 +133,7 @@ public class GnomeBT : MonoBehaviour
     {
         bool wallInFront = false;
         // Bit shift the index of the layer (3) to get a bit mask
-        int layerMask = 3;
+        //int layerMask = 3;
 
         RaycastHit hit;
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
