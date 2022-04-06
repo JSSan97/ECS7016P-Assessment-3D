@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityMovementAI;
 
+// Wrapper for Pursue Behaviour, modified based on UnityMovementAI 'UnitPursue' to work with interchangable behaviour
 public class BehaviourPursue : CustomBehaviour
 {
     public MovementAIRigidbody target;

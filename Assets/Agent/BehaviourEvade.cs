@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityMovementAI;
 
+// Wrapper for Evade Behaviour, modified based on UnityMovementAI 'UnitEvade' to work with interchangable behaviour
 public class BehaviourEvade : CustomBehaviour
 {
     public MovementAIRigidbody target;

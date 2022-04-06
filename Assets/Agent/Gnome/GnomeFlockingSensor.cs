@@ -4,6 +4,7 @@ using UnityMovementAI;
 
 // Note that this is a modified version of NearSensor in UnityMovementAI
 // Modified so that only gnomes are flocking together rather than all MovementAIRigidBodies
+// Also includes the player
 public class GnomeFlockingSensor : MonoBehaviour
 {
     public HashSet<MovementAIRigidbody> _targets = new HashSet<MovementAIRigidbody>();

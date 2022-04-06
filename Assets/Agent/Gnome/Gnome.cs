@@ -5,7 +5,7 @@ using UnityEngine;
 public class Gnome : MonoBehaviour
 {
     public float health = 100;
-    public float thirst = 50;
+    public float thirst = 70;
 
     // Thirst decreases per second regardless of tile
     public float thirstDecayPerSecond = 0.5f;
@@ -16,6 +16,7 @@ public class Gnome : MonoBehaviour
     // Health decreases when colliding with hunter per second
     public float hunterDamage = 10.0f;
 
+    // Used in Gnome Behaviour Tree
     public bool isTouchingWater = false;
     public bool isTouchingGrass = false;
     public bool isTouchingHunter = false;
@@ -26,24 +27,28 @@ public class Gnome : MonoBehaviour
             this.gameObject.SetActive(false);
         }
 
+        // Gnomes drink water to quench thirst
         if(isTouchingWater){
             if (this.thirst <= 100.0f)
                 this.thirst += thirstHealPerSecond * Time.deltaTime;
         } else {
+            // Thirst decreases over time
             this.thirst -= thirstDecayPerSecond * Time.deltaTime;
         }
 
+        // Gnomes heal when touching grass
         if(isTouchingGrass){
             if (this.health <= 100.0f)
                 this.health += healthHealPerSecond * Time.deltaTime;
         }
-
+        // Gnomes lose health when a hunter touching it.
         if(isTouchingHunter){
             this.health -= hunterDamage * Time.deltaTime;
         }
     }
 
-    private void OnTriggerEnter(Collider other) {   
+    private void OnTriggerEnter(Collider other) {  
+        // Use triggers to detect when a gnome is touching a tile 
         switch (other.gameObject.tag) {
             case "Water":
                 isTouchingWater = true;
@@ -55,6 +60,7 @@ public class Gnome : MonoBehaviour
     }
 
     private void OnTriggerStay(Collider other) {   
+         // Use triggers to detect when a gnome is touching a tile 
         switch (other.gameObject.tag) {
             case "Water":
                 isTouchingWater = true;
@@ -66,6 +72,7 @@ public class Gnome : MonoBehaviour
     }
 
     private void OnTriggerExit(Collider other) {
+         // Use triggers to detect when a gnome is no longer touching a tile
         switch (other.gameObject.tag) {
             case "Water":
                 isTouchingWater = false;
@@ -77,6 +84,7 @@ public class Gnome : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision other) {
+        // Use collisions to detect when a gnome is being attacked by a hunter.
         switch (other.gameObject.tag) {
             case "Hunter":
                 Debug.Log(this.gameObject.name + " is being attacked by " + other.gameObject.name);
@@ -86,6 +94,7 @@ public class Gnome : MonoBehaviour
     }
 
     private void OnCollisionExit(Collision other) {
+         // Use collisions to detect when a gnome is being attacked by a hunter.
         switch (other.gameObject.tag) {
             case "Hunter":
                 isTouchingHunter = false;
@@ -94,6 +103,7 @@ public class Gnome : MonoBehaviour
     }
 
     private void OnCollisionStay(Collision other) {   
+        // Use collisions to detect when a gnome is being attacked by a hunter.
         switch (other.gameObject.tag) {
             case "Hunter":
                 isTouchingHunter = true;

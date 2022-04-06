@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityMovementAI;
 
+// Wrapper for Seek Behaviour, modified based on UnityMovementAI 'UnitSeek' to work with interchangable behaviour
 public class BehaviourSeek : CustomBehaviour
 {
     public Transform target;

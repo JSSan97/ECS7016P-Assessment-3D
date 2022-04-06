@@ -13,11 +13,14 @@ public class HunterBT : MonoBehaviour
     // The current behaviour
     private CustomBehaviour behaviour;
 
+    // Fields and sensors that uses onTriggers used to aid in behaviour
+    private HunterPerception hunterPerception;
+    private HunterThreatField hunterThreatField;
+
+    // Steering Behaviour from UnityMovementAI
     private SteeringBasics steeringBasics;
     private Wander2 wander;
     private Pursue pursue;
-    private HunterPerception hunterPerception;
-    private HunterThreatField hunterThreatField;
     private Flee flee;
 
     private void Awake()
@@ -32,27 +35,33 @@ public class HunterBT : MonoBehaviour
 
     private void Start()
     {
+        // Create Behaviour Tree
         tree = CreateBehaviourTree();
         blackboard = tree.Blackboard;
         tree.Start();
     }
 
     private void FixedUpdate() {
+        // Perform steering every fixed update
         if(behaviour != null)
             behaviour.Perform();
     }
 
     private Root CreateBehaviourTree()
     {
+        // Main behaviour tree
         return new Root(
             new Service(0.5f, UpdatePerception,
                 new Selector(
+                    // Flee from player if being persued
                     new BlackboardCondition("isPursued", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
                         nodeFlee()
-                    ),                
+                    ),            
+                    // Otherwise chase target
                     new BlackboardCondition("hasTarget", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
                         nodeChaseTarget()
                     ), 
+                    // Wander
                     new Sequence(nodeWander())
                 )
             )

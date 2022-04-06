@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GnomePerception : MonoBehaviour
 {
+    // Class to find nearest water and grass tiles
     private GameObject perceivedWaterTile;
     private GameObject perceivedGrassTile;
     private GameObject gnome;
@@ -77,6 +78,7 @@ public class GnomePerception : MonoBehaviour
     }
 
     private GameObject SwitchNearestTarget(GameObject targetObject, Collider other) {
+        // Always find the nearest target object
         float distance1 = Vector3.Distance(this.gnome.transform.position, other.gameObject.transform.position);
         float distance2 = Vector3.Distance(this.gnome.transform.position, targetObject.transform.position);
         if(distance1 < distance2) {

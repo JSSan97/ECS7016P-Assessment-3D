@@ -9,13 +9,23 @@ public class GnomeBT : MonoBehaviour
     // Current behaviour
     CustomBehaviour behaviour;
 
-    private Gnome gnome;
+    // Gnome
+     private Gnome gnome;
+
+    // Fields and sensors that uses onTriggers used to aid in behaviour
     private GnomePerception gnomePerception;
     private GnomeThreatField gnomeThreatField;
+    private GnomeFlockingSensor gnomeFlockingSensor;
+
+    // Behaviours using UnityMovementAI library
     private SteeringBasics steeringBasics;
     private Wander2 wander;
     private Evade evade;
     private Flee flee;
+    // Flocking behaviours using UnityMovementAI library
+    private Cohesion cohesion;
+    private Separation separation;
+    private VelocityMatch velocityMatch;
 
     // The gnome's behaviour tree
     private Root tree;             
@@ -23,10 +33,6 @@ public class GnomeBT : MonoBehaviour
     private Blackboard blackboard;
 
     private Rigidbody rigidBody;
-    private Cohesion cohesion;
-    private Separation separation;
-    private VelocityMatch velocityMatch;
-    private GnomeFlockingSensor gnomeFlockingSensor;
 
     private void Awake() {
         steeringBasics = GetComponent<SteeringBasics>();
@@ -45,39 +51,49 @@ public class GnomeBT : MonoBehaviour
 
     private void Start()
     {
+        // Create Behaviour Tree
         tree = CreateBehaviourTree();
         blackboard = tree.Blackboard;
         tree.Start();
     }
 
     private void FixedUpdate() {
+        // Perform steering every fixed update
         if(behaviour != null)
             behaviour.Perform();
     }
 
     private Root CreateBehaviourTree()
     {
+        // Main Behaviour Tree
         return new Root(
             new Service(0.1f, UpdatePerception,
                 new Selector(
-                    new BlackboardCondition("isPlayerNearby", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
-                        nodeFlock()
-                    ), 
-                    new BlackboardCondition("health", Operator.IS_SMALLER_OR_EQUAL, 99.0f, Stops.IMMEDIATE_RESTART,
+                    // Heal when under a certain threshold of health.
+                    new BlackboardCondition("health", Operator.IS_SMALLER_OR_EQUAL, 80.0f, Stops.IMMEDIATE_RESTART,
                         nodeHeal()
                     ), 
+                    // Escape/Flee/Hide Hunter when a hunter is nearby.
                     new BlackboardCondition("isHunterNearby", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
                         nodeEscapeHunter()
                     ),
-                    new BlackboardCondition("thirst", Operator.IS_SMALLER_OR_EQUAL, 60.0f, Stops.IMMEDIATE_RESTART,
+                    // Quench Thirst behaviour when below a certain threshhold of thirst.
+                    new BlackboardCondition("thirst", Operator.IS_SMALLER_OR_EQUAL, 50.0f, Stops.IMMEDIATE_RESTART,
                         nodeQuenchThirst()
                     ), 
+                    // Stay in water until a threshhold.
                     new BlackboardCondition("thirst", Operator.IS_SMALLER_OR_EQUAL, 80.0f, Stops.IMMEDIATE_RESTART,
                         nodeStayInWater()
                     ), 
+                    // Flock to player if nearby.
+                    new BlackboardCondition("isPlayerNearby", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
+                        nodeFlock()
+                    ), 
+                    // Spin near a wall.
                     new BlackboardCondition("isWallInFront", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
                         nodeSpin()
                     ),
+                    // Wander about.
                     nodeWander()
                 )
             )
@@ -88,7 +104,7 @@ public class GnomeBT : MonoBehaviour
     * 
     * GNOME ACTIONS
     * 
-    * Wander, Seek Water, Seek Grass, Wander, Evade and Flee
+    * Wander, Seek Water & Grass, Wander, Evade, Flee, Stand, Spin and Flock to Player
     */
     private void actionSeekWater() {
         if(gnomePerception.getPerceivedWaterTile() != null)
@@ -152,10 +168,8 @@ public class GnomeBT : MonoBehaviour
 
     private void WallCollisionPerception()
     {
+        // Detect when there is a wall in front of the gnome.
         bool wallInFront = false;
-        // Bit shift the index of the layer (3) to get a bit mask
-        //int layerMask = 3;
-
         RaycastHit hit;
         Vector3 fwd = transform.TransformDirection(transform.right);
         if (Physics.Raycast(transform.position, fwd, out hit, 1))
@@ -214,15 +228,13 @@ public class GnomeBT : MonoBehaviour
 
     private Node nodeEscapeHunter()
     {
+        // Behaviour when needing to escape hunter
         return new Selector(
             new BlackboardCondition("isTouchingGrass", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
                 nodeStand()
             ),
             new BlackboardCondition("isGrassNearby", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
                 nodeSeekGrass()
-            ),
-            new BlackboardCondition("isWallInFront", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
-                nodeSpin()
             ),
             new RandomSelector(
                 new Sequence(
@@ -237,6 +249,7 @@ public class GnomeBT : MonoBehaviour
 
     private Node nodeHeal()
     {
+        // Behaviour when needing to heal
         return new Selector(
             new BlackboardCondition("isTouchingGrass", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
                 new Sequence(
@@ -253,6 +266,7 @@ public class GnomeBT : MonoBehaviour
 
     private Node nodeQuenchThirst()
     {
+        // Behaviour when quenching thirst
         return new Selector(
             new BlackboardCondition("isTouchingWater", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
                 nodeStayInWater()
@@ -265,8 +279,12 @@ public class GnomeBT : MonoBehaviour
     }
 
     private Node nodeStayInWater(){
+        // Behaviour for staying in water
         return new BlackboardCondition("isTouchingWater", Operator.IS_EQUAL, true, Stops.IMMEDIATE_RESTART,
             new Selector(
+                new BlackboardCondition("isHunterNearby", Operator.IS_EQUAL, false, Stops.IMMEDIATE_RESTART,
+                    nodeStand()
+                ),
                 nodeWander()
             )
         );

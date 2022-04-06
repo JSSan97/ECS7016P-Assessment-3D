@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityMovementAI;
 
+// Wrapper for Flocking Behaviour, modified based on UnityMovementAI 'UnitFlocking' to work with interchangable behaviour
 public class BehaviourFlocking : CustomBehaviour
 {
     public float cohesionWeight = 4f;

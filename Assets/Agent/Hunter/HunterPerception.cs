@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HunterPerception : MonoBehaviour
 {
+    // Class for hunter perception to find gnome targets to persue
     private GameObject target;
     private GameObject hunter;
 

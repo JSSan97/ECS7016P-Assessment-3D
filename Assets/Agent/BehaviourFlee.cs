@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityMovementAI;
 
+// Wrapper for Flee Behaviour, modified based on UnityMovementAI 'UnitFlee' to work with interchangable behaviour
 public class BehaviourFlee : CustomBehaviour
 {
     public Transform target;

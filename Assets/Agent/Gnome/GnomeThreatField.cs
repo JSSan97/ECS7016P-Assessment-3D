@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GnomeThreatField : MonoBehaviour
 {
+    // Class to find the nearest pursuer aka Hunter.
     private GameObject pursuer;
     private GameObject gnome;
 

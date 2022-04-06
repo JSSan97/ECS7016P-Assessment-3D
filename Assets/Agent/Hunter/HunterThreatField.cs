@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HunterThreatField : MonoBehaviour
 {
+    // The hunter feels threatened when the player is within the field.
     private GameObject pursuer;
     private GameObject hunter;
 

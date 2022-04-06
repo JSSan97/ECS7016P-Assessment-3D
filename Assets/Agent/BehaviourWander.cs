@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityMovementAI;
 
+// Wrapper for Wander Behaviour, modified based on UnityMovementAI 'UnitWander' to work with interchangable behaviour
 public class BehaviourWander : CustomBehaviour
 {
     SteeringBasics steeringBasics;
