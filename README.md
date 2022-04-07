@@ -54,7 +54,7 @@ Class that contains the logic behind building the room and corridor game objects
 Static class for settings. Currently has settings for colours of tiles.
 
 ## Tile
-Class that when instantiated, creates a tile or 'cube' object based on the parameters set in the constructor. 
+Class that when instantiated, creates a tile or 'cube' object based on the parameters set in the constructor. Agents interact with tiles in the game (see Interactive Agents section).
 
 
 # Interactive Agents
