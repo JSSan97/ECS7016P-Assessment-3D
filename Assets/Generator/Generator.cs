@@ -160,6 +160,7 @@ public class Generator : MonoBehaviour
         currentDepth = currentDepth - 1;
 
         while(currentDepth > -1) {
+            // Get all nodes at a current depth of the loop.
             parents = BSPTree.GetNodesAtDepth(currentDepth);
             foreach (BSPNode node in parents) {
                 if(node.leftNode != null && node.rightNode != null) {
@@ -170,7 +171,7 @@ public class Generator : MonoBehaviour
                     BSPNode node1 = null;
                     BSPNode node2 = null;
                     float minDistance = 0;
-
+                    // Find the closest rooms to connect
                     foreach(BSPNode leftNode in leftChildren) {
                         foreach(BSPNode rightNode in rightChildren) {
                             float tempDistance = Vector3.Distance(leftNode.GetRoomCentre(), rightNode.GetRoomCentre());
@@ -182,9 +183,11 @@ public class Generator : MonoBehaviour
                             }
                         }
                     }
+                    // Draw the corridor
                     dungeonDrawer.DrawCorridors(node1, node2);
                 }
             }
+            // Move up the tree
             currentDepth = currentDepth - 1;
         }
     }
@@ -284,16 +287,19 @@ public class Generator : MonoBehaviour
     }
 
     private void PopulateRooms(){
+        // Populate a room using cellular automata
         int totalGnomeCount = 1;
         int totalHunterCount = 1;
         bool addedPlayer = false;
 
         foreach (BSPNode node in BSPTree.GetLeafNodes()) {
-            // Populate room for tiles
+            // Update the room space
             node.UpdateRoomSpace();
+            // Populate room for tiles
             // Use wallmap so we don't spawn agents in walls
             int[,] wallMap = dungeonDrawer.PopulateRoom(node);
 
+            // Once the room tiles are set, we can now add the gnomes, hunter and player
             int gnomeCount = 0;
             int hunterCount = 0;
 
@@ -318,11 +324,13 @@ public class Generator : MonoBehaviour
     }
 
     private void AddPlayer(BSPNode node, int[,] wallMap, string name, GameObject prefabAgent){
+        // Method for adding the player
         bool foundPosition = false;
 
         int x = 0;
         int z = 0;
 
+        // Ensure plauyer is not set in a wall tile.
         while(!foundPosition) {
             x = Random.Range(1, wallMap.GetLength(0) - 1);
             z = Random.Range(1, wallMap.GetLength(1) - 1);
@@ -331,20 +339,23 @@ public class Generator : MonoBehaviour
             } 
         }
             
+        // Instantiate player
         Vector3 position = node.roomBottomLeft + new Vector3(x + 0.5F, 0.8f, z + 0.5f);
         GameObject player = Instantiate(prefabAgent, position, Quaternion.identity);
         player.name = name;
-
+        // Set camera to follow the player
         player.GetComponent<MoveCamera2>().camera = mainCamera;
     }
 
     private bool AddAgent(BSPNode node, int[,] wallMap, string name, GameObject prefabAgent){
+         // Method for adding the agent
         bool foundPosition = false;
         int attempts = 3;
 
         int x = 0;
         int z = 0;
 
+        // Ensure agent is not set in a wall tile.
         while(!foundPosition && attempts != 0) {
             x = Random.Range(1, wallMap.GetLength(0) - 1);
             z = Random.Range(1, wallMap.GetLength(1) - 1);
@@ -353,7 +364,7 @@ public class Generator : MonoBehaviour
                 foundPosition = true;
             } 
         }
-            
+        // Instantiate agent
         Vector3 position = node.roomBottomLeft + new Vector3(x + 0.5F, 0.8f, z + 0.5f);
         GameObject agent = Instantiate(prefabAgent, position, Quaternion.identity);
         agent.name = name;
