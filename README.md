@@ -1,5 +1,5 @@
-# ECS7016P-Assessment-3D
- Procedural Content Generatin (PCG) and Interactive Agents Demo. Currently there is no 'goal' in the game, but rather showcases a scenario for a procedurally generated dungeon and interaction between agents and the player.
+# Gnomes & Hunters
+ Procedural Content Generatin (PCG) and Interactive Agents Demo as part of the ECS7016 technical Assessment. Currently there is no goal in the game. This demo showcases a scenario for a procedurally generated dungeon and interaction between agents and the player.
 
  Controls are as follows:
  - W - Move forward
