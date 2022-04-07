@@ -1,5 +1,11 @@
 # ECS7016P-Assessment-3D
- Procedural Content Generatin (PCG) and Interactive Agents Demo.
+ Procedural Content Generatin (PCG) and Interactive Agents Demo. Currently there is no 'goal' in the game, but rather showcases a scenario for a procedurally generated dungeon and interaction between agents and the player.
+
+ Controls are as follows:
+ - W - Move forward
+ - S - Move backwards
+ - A - Rotate Left
+ - D - Rotate Right
 
 # Third Party Libraries
 Disclaimer!! I do not own any of the third party libraries. These libraries are located in Assets/Third Party.
