@@ -4,8 +4,8 @@
  Controls are as follows:
  - W - Move forward
  - S - Move backwards
- - A - Rotate Left
- - D - Rotate Right
+ - A - Rotate Anticlockwise
+ - D - Rotate Clockwise
 
 # Third Party Libraries
 Disclaimer!! I do not own any of the third party libraries. These libraries are located in Assets/Third Party.
