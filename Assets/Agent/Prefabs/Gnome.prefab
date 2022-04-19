@@ -327,7 +327,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  thirst: 70
+  thirst: 60
   thirstDecayPerSecond: 0.5
   thirstHealPerSecond: 4
   healthHealPerSecond: 4
